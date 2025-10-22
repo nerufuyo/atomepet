@@ -412,83 +412,6 @@ cd build/web && python3 -m http.server 8000
 - Mock builders
 - Widget testers
 
-## Demo Video Checklist
-
-When recording the demo video, cover these points:
-
-### Web Application (3-4 minutes)
-1. **Login/Dashboard** - Show authentication and admin dashboard
-2. **Create Pet** - Add a new pet with form validation
-3. **Browse Pets** - Show data table with search, filter, sort, pagination
-4. **Edit Pet** - Update existing pet information
-5. **Delete Pet** - Remove pet with confirmation dialog
-6. **Responsive Design** - Resize browser to show tablet/mobile layouts
-7. **Statistics** - Show real-time pet count updates
-
-### Mobile Application (2-3 minutes)
-1. **Splash & Auth** - App launch and login flow
-2. **Browse Pets** - List view with filters and search
-3. **Pet Details** - View full pet information
-4. **Store** - Show inventory and purchase simulation
-5. **Orders** - Display order history
-6. **Profile** - User profile management
-7. **Offline Mode** - Toggle airplane mode and show caching
-
-### Tips for Demo Video
-- Use screen recording software (OBS, QuickTime, etc.)
-- Show both web browser and mobile simulator side by side
-- Highlight key features with annotations
-- Keep video under 5-7 minutes
-- Include audio narration explaining features
-- Show API calls in network inspector (optional)
-
-## Project Highlights
-
-### Technical Excellence
-- **86+ Tests** - Comprehensive test coverage
-- **Clean Code** - Following Dart style guide
-- **Type Safety** - Strong typing with null safety
-- **Documentation** - Inline comments and README
-- **Error Handling** - Try-catch with user feedback
-- **Performance** - Optimized builds and caching
-
-### User Experience
-- **Responsive Design** - Works on all screen sizes
-- **Loading States** - Shimmer and skeleton screens
-- **Empty States** - Helpful messages and actions
-- **Error States** - Clear error messages with retry
-- **Animations** - Smooth transitions and feedback
-- **Accessibility** - Semantic labels and contrasts
-
-### Best Practices
-- **Git Workflow** - Atomic commits with clear messages
-- **Code Organization** - Modular and scalable structure
-- **Naming Conventions** - Descriptive and consistent
-- **Constants** - No magic numbers or strings
-- **Separation of Concerns** - Single responsibility
-- **Reusability** - DRY principle throughout
-
-## Project Timeline
-
-**Total Development Time:** 3 days
-
-- **Day 1:** API integration, authentication, basic CRUD
-- **Day 2:** Web admin dashboard, mobile UI enhancement
-- **Day 3:** Testing, documentation, polish
-
-## Contact & Submission
-
-**Developer:** LISTYO ADI PAMUNGKAS
-
-**Submission Emails:**
-- irfan.suhada@advancegroup.com
-- sasanadi.ruka@advancegroup.com
-- isnan.franseda@advancegroup.com
-
-**Deadline:** October 24, 2025 at 3 PM
-
-**Repository:** [github.com/nerufuyo/atomepet](https://github.com/nerufuyo/atomepet)
-
 ## Troubleshooting
 
 ### Common Issues
@@ -521,14 +444,5 @@ flutter clean
 flutter pub get
 ```
 
-## Acknowledgments
-
-- **Atome** - For the opportunity and challenge
-- **Swagger Petstore** - For the comprehensive API
-- **Flutter Team** - For the excellent framework
-- **GetX Community** - For the powerful state management
-- **Open Source** - For the amazing packages and tools
-
 ---
 
-**Built for Atome Frontend Engineer Position**
