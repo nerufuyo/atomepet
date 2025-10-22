@@ -8,11 +8,13 @@ import 'package:atomepet/views/screens/auth/register_screen.dart';
 import 'package:atomepet/views/screens/home/home_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_list_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_detail_screen.dart';
+import 'package:atomepet/views/screens/pet/pet_form_screen.dart';
 import 'package:atomepet/views/screens/store/store_screen.dart';
 import 'package:atomepet/views/screens/store/order_history_screen.dart';
 import 'package:atomepet/views/screens/profile/profile_screen.dart';
 import 'package:atomepet/bindings/home_binding.dart';
 import 'package:atomepet/bindings/auth_binding.dart';
+import 'package:atomepet/models/pet.dart';
 
 class AppPages {
   static final pages = [
@@ -58,6 +60,16 @@ class AppPages {
       binding: HomeBinding(),
       middlewares: [AuthMiddleware()],
       transition: Transition.downToUp,
+      transitionDuration: AppTransitions.defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.petForm,
+      page: () => PetFormScreen(
+        pet: Get.arguments as Pet?,
+      ),
+      binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.rightToLeft,
       transitionDuration: AppTransitions.defaultDuration,
     ),
     GetPage(

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:atomepet/controllers/pet_controller.dart';
 import 'package:atomepet/views/widgets/app_widgets.dart';
 import 'package:atomepet/views/widgets/app_button.dart';
+import 'package:atomepet/routes/app_routes.dart';
 
 class PetDetailScreen extends StatelessWidget {
   const PetDetailScreen({super.key});
@@ -25,6 +26,24 @@ class PetDetailScreen extends StatelessWidget {
             SliverAppBar(
               expandedHeight: 300,
               pinned: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    final result = await Get.toNamed(
+                      AppRoutes.petForm,
+                      arguments: pet,
+                    );
+                    if (result == true) {
+                      controller.fetchPetById(pet.id!);
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _showDeleteConfirmation(context),
+                ),
+              ],
               flexibleSpace: FlexibleSpaceBar(
                 background: pet.photoUrls.isNotEmpty
                     ? PageView.builder(

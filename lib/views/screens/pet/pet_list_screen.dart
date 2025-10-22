@@ -129,11 +129,15 @@ class PetListScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(AppRoutes.petAdd);
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final result = await Get.toNamed(AppRoutes.petForm);
+          if (result == true) {
+            controller.fetchPetsByStatus([PetStatus.available]);
+          }
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Add Pet'),
       ),
     );
   }

@@ -5,6 +5,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String petList = '/pets';
   static const String petDetail = '/pet/:id';
+  static const String petForm = '/pet/form';
   static const String petAdd = '/pet/add';
   static const String petEdit = '/pet/edit/:id';
   static const String store = '/store';
