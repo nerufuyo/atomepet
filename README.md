@@ -199,17 +199,6 @@ Key patterns:
 4. Run tests and ensure they pass
 5. Submit a pull request
 
-## Commit Message Format
-
-Follow conventional commits:
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation changes
-- `style:` Code formatting
-- `refactor:` Code refactoring
-- `test:` Test additions
-- `chore:` Maintenance tasks
-
 ## License
 
 This project is part of a learning exercise based on the Swagger Petstore API specification.
