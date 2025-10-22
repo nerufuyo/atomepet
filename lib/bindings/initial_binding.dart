@@ -8,6 +8,7 @@ import 'package:atomepet/repositories/pet_repository.dart';
 import 'package:atomepet/repositories/store_repository.dart';
 import 'package:atomepet/repositories/user_repository.dart';
 import 'package:atomepet/controllers/theme_controller.dart';
+import 'package:atomepet/controllers/user_controller.dart';
 
 class InitialBinding extends Bindings {
   @override
@@ -37,5 +38,9 @@ class InitialBinding extends Bindings {
     );
 
     Get.lazyPut(() => ThemeController(), fenix: true);
+    Get.lazyPut(
+      () => UserController(Get.find<UserRepository>()),
+      fenix: true,
+    );
   }
 }

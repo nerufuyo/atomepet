@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:atomepet/routes/app_routes.dart';
 import 'package:atomepet/config/app_transitions.dart';
+import 'package:atomepet/middlewares/auth_middleware.dart';
 import 'package:atomepet/views/screens/splash_screen.dart';
 import 'package:atomepet/views/screens/auth/login_screen.dart';
 import 'package:atomepet/views/screens/auth/register_screen.dart';
@@ -39,6 +40,7 @@ class AppPages {
       name: AppRoutes.home,
       page: () => const HomeScreen(),
       binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.fadeIn,
       transitionDuration: AppTransitions.defaultDuration,
     ),
@@ -46,6 +48,7 @@ class AppPages {
       name: AppRoutes.petList,
       page: () => const PetListScreen(),
       binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
       transitionDuration: AppTransitions.defaultDuration,
     ),
@@ -53,6 +56,7 @@ class AppPages {
       name: AppRoutes.petDetail,
       page: () => const PetDetailScreen(),
       binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.downToUp,
       transitionDuration: AppTransitions.defaultDuration,
     ),
@@ -60,6 +64,7 @@ class AppPages {
       name: AppRoutes.store,
       page: () => const StoreScreen(),
       binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
       transitionDuration: AppTransitions.defaultDuration,
     ),
@@ -67,6 +72,7 @@ class AppPages {
       name: AppRoutes.orderHistory,
       page: () => const OrderHistoryScreen(),
       binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
       transitionDuration: AppTransitions.defaultDuration,
     ),
@@ -74,6 +80,7 @@ class AppPages {
       name: AppRoutes.profile,
       page: () => const ProfileScreen(),
       binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
       transitionDuration: AppTransitions.defaultDuration,
     ),
