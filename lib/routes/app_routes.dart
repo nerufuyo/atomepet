@@ -14,4 +14,6 @@ class AppRoutes {
   static const String cart = '/cart';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String admin = '/admin';
+  static const String adminPets = '/admin/pets';
 }

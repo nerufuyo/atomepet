@@ -12,6 +12,7 @@ import 'package:atomepet/views/screens/pet/pet_form_screen.dart';
 import 'package:atomepet/views/screens/store/store_screen.dart';
 import 'package:atomepet/views/screens/store/order_history_screen.dart';
 import 'package:atomepet/views/screens/profile/profile_screen.dart';
+import 'package:atomepet/views/screens/admin/admin_dashboard_screen.dart';
 import 'package:atomepet/bindings/home_binding.dart';
 import 'package:atomepet/bindings/auth_binding.dart';
 import 'package:atomepet/models/pet.dart';
@@ -94,6 +95,22 @@ class AppPages {
       binding: HomeBinding(),
       middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
+      transitionDuration: AppTransitions.defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.admin,
+      page: () => const AdminDashboardScreen(),
+      binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.fadeIn,
+      transitionDuration: AppTransitions.defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.adminPets,
+      page: () => const AdminDashboardScreen(),
+      binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.fadeIn,
       transitionDuration: AppTransitions.defaultDuration,
     ),
   ];

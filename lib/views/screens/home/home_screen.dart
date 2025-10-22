@@ -111,13 +111,16 @@ class HomeScreen extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 16),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                children: [
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth >= 600 ? 3 : 2;
+                  return GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    children: [
                   _buildActionCard(
                     context,
                     icon: Icons.pets,
@@ -146,7 +149,16 @@ class HomeScreen extends StatelessWidget {
                     subtitle: 'Your account',
                     onTap: () => Get.toNamed(AppRoutes.profile),
                   ),
+                  _buildActionCard(
+                    context,
+                    icon: Icons.admin_panel_settings,
+                    title: 'Admin',
+                    subtitle: 'Dashboard',
+                    onTap: () => Get.toNamed(AppRoutes.admin),
+                  ),
                 ],
+                  );
+                },
               ),
             ],
           ),
