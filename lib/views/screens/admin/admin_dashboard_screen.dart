@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:atomepet/controllers/pet_controller.dart';
 import 'package:atomepet/controllers/user_controller.dart';
+import 'package:atomepet/models/pet.dart';
 import 'package:atomepet/routes/app_routes.dart';
+import 'package:atomepet/views/widgets/admin/pet_data_table.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -364,9 +366,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           // Statistics Cards
           Obx(() {
             final pets = petController.pets;
-            final availableCount = pets.where((p) => p.status == 'available').length;
-            final pendingCount = pets.where((p) => p.status == 'pending').length;
-            final soldCount = pets.where((p) => p.status == 'sold').length;
+            final availableCount = pets.where((p) => p.status == PetStatus.available).length;
+            final pendingCount = pets.where((p) => p.status == PetStatus.pending).length;
+            final soldCount = pets.where((p) => p.status == PetStatus.sold).length;
 
             return LayoutBuilder(
               builder: (context, constraints) {
@@ -531,8 +533,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildPetManagementContent() {
-    return const Center(
-      child: Text('Pet Management - Coming in next step'),
+    return const SingleChildScrollView(
+      padding: EdgeInsets.all(24),
+      child: PetDataTable(),
     );
   }
 
