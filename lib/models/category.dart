@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 part 'category.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Category extends Equatable {
   final int? id;
   final String? name;

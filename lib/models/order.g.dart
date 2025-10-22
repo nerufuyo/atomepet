@@ -18,14 +18,23 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       complete: json['complete'] as bool?,
     );
 
-Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
-      'id': instance.id,
-      'petId': instance.petId,
-      'quantity': instance.quantity,
-      'shipDate': instance.shipDate?.toIso8601String(),
-      'status': _$OrderStatusEnumMap[instance.status],
-      'complete': instance.complete,
-    };
+Map<String, dynamic> _$OrderToJson(Order instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('petId', instance.petId);
+  writeNotNull('quantity', instance.quantity);
+  writeNotNull('shipDate', instance.shipDate?.toIso8601String());
+  writeNotNull('status', _$OrderStatusEnumMap[instance.status]);
+  writeNotNull('complete', instance.complete);
+  return val;
+}
 
 const _$OrderStatusEnumMap = {
   OrderStatus.placed: 'placed',

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 part 'tag.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Tag extends Equatable {
   final int? id;
   final String? name;

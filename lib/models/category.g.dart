@@ -11,7 +11,16 @@ Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
       name: json['name'] as String?,
     );
 
-Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-    };
+Map<String, dynamic> _$CategoryToJson(Category instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  return val;
+}

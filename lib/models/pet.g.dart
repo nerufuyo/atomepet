@@ -21,14 +21,23 @@ Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
           unknownValue: PetStatus.available),
     );
 
-Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'category': instance.category,
-      'photoUrls': instance.photoUrls,
-      'tags': instance.tags,
-      'status': _$PetStatusEnumMap[instance.status],
-    };
+Map<String, dynamic> _$PetToJson(Pet instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['name'] = instance.name;
+  writeNotNull('category', instance.category);
+  val['photoUrls'] = instance.photoUrls;
+  writeNotNull('tags', instance.tags);
+  writeNotNull('status', _$PetStatusEnumMap[instance.status]);
+  return val;
+}
 
 const _$PetStatusEnumMap = {
   PetStatus.available: 'available',

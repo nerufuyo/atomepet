@@ -12,9 +12,17 @@ ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
       message: json['message'] as String?,
     );
 
-Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) =>
-    <String, dynamic>{
-      'code': instance.code,
-      'type': instance.type,
-      'message': instance.message,
-    };
+Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('code', instance.code);
+  writeNotNull('type', instance.type);
+  writeNotNull('message', instance.message);
+  return val;
+}

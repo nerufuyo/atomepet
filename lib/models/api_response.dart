@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 part 'api_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class ApiResponse extends Equatable {
   final int? code;
   final String? type;

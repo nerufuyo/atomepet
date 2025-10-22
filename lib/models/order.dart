@@ -5,7 +5,7 @@ part 'order.g.dart';
 
 enum OrderStatus { placed, approved, delivered }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Order extends Equatable {
   final int? id;
   final int? petId;

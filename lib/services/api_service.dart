@@ -3,7 +3,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
-  static const String baseUrl = '/api/v3';
+  static const String baseUrl = 'https://petstore3.swagger.io/api/v3';
   late Dio _dio;
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 

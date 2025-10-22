@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 part 'user.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class User extends Equatable {
   final int? id;
   final String? username;
