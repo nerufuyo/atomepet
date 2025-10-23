@@ -7,7 +7,7 @@ part 'pet.g.dart';
 
 enum PetStatus { available, pending, sold }
 
-@JsonSerializable(includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Pet extends Equatable {
   final int? id;
   final String name;

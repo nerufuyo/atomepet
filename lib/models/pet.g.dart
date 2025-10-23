@@ -32,9 +32,9 @@ Map<String, dynamic> _$PetToJson(Pet instance) {
 
   writeNotNull('id', instance.id);
   val['name'] = instance.name;
-  writeNotNull('category', instance.category);
+  writeNotNull('category', instance.category?.toJson());
   val['photoUrls'] = instance.photoUrls;
-  writeNotNull('tags', instance.tags);
+  writeNotNull('tags', instance.tags?.map((e) => e.toJson()).toList());
   writeNotNull('status', _$PetStatusEnumMap[instance.status]);
   return val;
 }
