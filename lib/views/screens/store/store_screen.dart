@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:atomepet/controllers/store_controller.dart';
 import 'package:atomepet/views/widgets/app_widgets.dart';
-import 'package:atomepet/views/widgets/connectivity_banner.dart';
 
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
@@ -23,7 +22,6 @@ class StoreScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const ConnectivityBanner(),
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value && controller.inventory.isEmpty) {

@@ -21,10 +21,11 @@ class UserController extends GetxController {
 
   Future<void> checkAuthStatus() async {
     try {
-      final user = await _userRepository.getCurrentUser();
-      if (user != null) {
-        currentUser.value = user;
+      // Check if there's a stored user (authentication is managed by API keys)
+      if (currentUser.value != null) {
         isAuthenticated.value = true;
+      } else {
+        isAuthenticated.value = false;
       }
     } catch (e) {
       isAuthenticated.value = false;
@@ -151,22 +152,6 @@ class UserController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> syncPendingChanges() async {
-    try {
-      isLoading.value = true;
-      await _userRepository.syncPendingChanges();
-      Get.snackbar(
-        'success'.tr,
-        'Profile synced successfully',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } catch (e) {
-      error.value = e.toString();
     } finally {
       isLoading.value = false;
     }

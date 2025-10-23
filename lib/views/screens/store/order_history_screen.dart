@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:atomepet/controllers/store_controller.dart';
 import 'package:atomepet/models/order.dart';
 import 'package:atomepet/views/widgets/app_widgets.dart';
-import 'package:atomepet/views/widgets/connectivity_banner.dart';
 import 'package:atomepet/routes/app_routes.dart';
 import 'package:intl/intl.dart';
 
@@ -17,16 +16,9 @@ class OrderHistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('order_history'.tr),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sync),
-            onPressed: () => controller.syncPendingOrders(),
-          ),
-        ],
       ),
       body: Column(
         children: [
-          const ConnectivityBanner(),
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value && controller.orders.isEmpty) {
@@ -37,7 +29,7 @@ class OrderHistoryScreen extends StatelessWidget {
                   controller.orders.isEmpty) {
                 return ErrorView(
                   message: controller.error.value,
-                  onRetry: () => controller.fetchCachedOrders(),
+                  onRetry: () => controller.fetchInventory(),
                 );
               }
 
@@ -50,7 +42,7 @@ class OrderHistoryScreen extends StatelessWidget {
               }
 
               return RefreshIndicator(
-                onRefresh: () => controller.syncPendingOrders(),
+                onRefresh: () => controller.fetchInventory(),
                 child: Column(
                   children: [
                     _buildOrderStats(context, controller),

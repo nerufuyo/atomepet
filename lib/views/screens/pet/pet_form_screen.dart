@@ -40,7 +40,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
 
   void _initializeForm() {
     final pet = widget.pet!;
-    _nameController.text = pet.name;
+    _nameController.text = pet.name ?? '';
     _selectedStatus = pet.status ?? PetStatus.available;
 
     if (pet.category != null) {
@@ -48,7 +48,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       _categoryNameController.text = pet.category!.name ?? '';
     }
 
-    _photoUrls.value = List.from(pet.photoUrls);
+    _photoUrls.value = List.from(pet.photoUrls ?? []);
     if (pet.tags != null) {
       _tags.value = List.from(pet.tags!);
     }

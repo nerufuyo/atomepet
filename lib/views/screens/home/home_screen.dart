@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:atomepet/controllers/user_controller.dart';
-import 'package:atomepet/controllers/sync_controller.dart';
 import 'package:atomepet/controllers/theme_controller.dart';
 import 'package:atomepet/routes/app_routes.dart';
 
@@ -11,28 +10,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = Get.find<UserController>();
-    final syncController = Get.find<SyncController>();
     final themeController = Get.find<ThemeController>();
 
     return Scaffold(
       appBar: AppBar(
         title: Text('app_name'.tr),
         actions: [
-          Obx(() => IconButton(
-                icon: Icon(
-                  syncController.isOnline.value
-                      ? Icons.cloud_done
-                      : Icons.cloud_off,
-                ),
-                onPressed: () {
-                  if (syncController.isOnline.value) {
-                    syncController.syncAll();
-                  }
-                },
-                tooltip: syncController.isOnline.value
-                    ? 'Online - Tap to sync'
-                    : 'Offline',
-              )),
           Obx(() => IconButton(
                 icon: Icon(
                   themeController.isDarkMode.value

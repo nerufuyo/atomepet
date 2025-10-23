@@ -34,7 +34,7 @@ class _PetDataTableState extends State<PetDataTable> {
     // Apply search filter
     if (_searchQuery.isNotEmpty) {
       pets = pets.where((pet) {
-        return pet.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        return (pet.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
                (pet.category?.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
                (pet.id?.toString().contains(_searchQuery) ?? false);
       }).toList();
@@ -57,7 +57,7 @@ class _PetDataTableState extends State<PetDataTable> {
           comparison = (a.id ?? 0).compareTo(b.id ?? 0);
           break;
         case 'name':
-          comparison = a.name.compareTo(b.name);
+          comparison = (a.name ?? '').compareTo(b.name ?? '');
           break;
         case 'status':
           comparison = (a.status?.index ?? 0).compareTo(b.status?.index ?? 0);
@@ -290,11 +290,11 @@ class _PetDataTableState extends State<PetDataTable> {
                             cells: [
                               DataCell(Text(pet.id?.toString() ?? 'N/A')),
                               DataCell(
-                                pet.photoUrls.isNotEmpty
+                                (pet.photoUrls?.isNotEmpty ?? false)
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(4),
                                         child: Image.network(
-                                          pet.photoUrls.first,
+                                          pet.photoUrls!.first,
                                           width: 40,
                                           height: 40,
                                           fit: BoxFit.cover,
@@ -304,7 +304,7 @@ class _PetDataTableState extends State<PetDataTable> {
                                       )
                                     : const Icon(Icons.pets, size: 24),
                               ),
-                              DataCell(Text(pet.name)),
+                              DataCell(Text(pet.name ?? 'Unknown')),
                               DataCell(Text(pet.category?.name ?? 'N/A')),
                               DataCell(_buildStatusChip(theme, pet.status)),
                               DataCell(

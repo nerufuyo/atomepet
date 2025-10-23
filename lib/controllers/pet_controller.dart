@@ -149,22 +149,6 @@ class PetController extends GetxController {
     }
   }
 
-  Future<void> syncPendingChanges() async {
-    try {
-      isLoading.value = true;
-      await _petRepository.syncPendingChanges();
-      Get.snackbar(
-        'success'.tr,
-        'Synced successfully',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } catch (e) {
-      error.value = e.toString();
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   void selectPet(Pet pet) {
     selectedPet.value = pet;
   }

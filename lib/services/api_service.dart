@@ -133,11 +133,16 @@ class ApiService {
     Options? options,
   }) async {
     try {
+      // DELETE requests often return empty or non-JSON responses
+      // Set responseType to plain to avoid JSON parsing errors
+      final deleteOptions = options ?? Options();
+      deleteOptions.responseType = ResponseType.plain;
+      
       return await _dio.delete(
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: deleteOptions,
       );
     } catch (e) {
       rethrow;

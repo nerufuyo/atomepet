@@ -45,16 +45,16 @@ class PetDetailScreen extends StatelessWidget {
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                background: pet.photoUrls.isNotEmpty
+                background: (pet.photoUrls?.isNotEmpty ?? false)
                     ? PageView.builder(
-                        itemCount: pet.photoUrls.length,
+                        itemCount: pet.photoUrls?.length ?? 0,
                         itemBuilder: (context, index) {
                           return Hero(
                             tag: index == 0
                                 ? 'pet-${pet.id}'
                                 : 'pet-${pet.id}-$index',
                             child: CachedNetworkImage(
-                              imageUrl: pet.photoUrls[index],
+                              imageUrl: pet.photoUrls![index],
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Theme.of(
@@ -91,7 +91,7 @@ class PetDetailScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            pet.name,
+                            pet.name ?? 'Unknown Pet',
                             style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),

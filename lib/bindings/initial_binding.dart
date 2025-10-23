@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:atomepet/services/api_service.dart';
-import 'package:atomepet/services/database_service.dart';
 import 'package:atomepet/services/pet_service.dart';
 import 'package:atomepet/services/store_service.dart';
 import 'package:atomepet/services/user_service.dart';
@@ -14,26 +13,21 @@ class InitialBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => ApiService(), fenix: true);
-    Get.lazyPut(() => DatabaseService(), fenix: true);
 
     Get.lazyPut(() => PetService(Get.find<ApiService>()), fenix: true);
     Get.lazyPut(() => StoreService(Get.find<ApiService>()), fenix: true);
     Get.lazyPut(() => UserService(Get.find<ApiService>()), fenix: true);
 
     Get.lazyPut(
-      () => PetRepository(Get.find<PetService>(), Get.find<DatabaseService>()),
+      () => PetRepository(Get.find<PetService>()),
       fenix: true,
     );
     Get.lazyPut(
-      () => StoreRepository(
-        Get.find<StoreService>(),
-        Get.find<DatabaseService>(),
-      ),
+      () => StoreRepository(Get.find<StoreService>()),
       fenix: true,
     );
     Get.lazyPut(
-      () =>
-          UserRepository(Get.find<UserService>(), Get.find<DatabaseService>()),
+      () => UserRepository(Get.find<UserService>()),
       fenix: true,
     );
 

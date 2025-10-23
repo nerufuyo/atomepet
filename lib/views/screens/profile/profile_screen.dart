@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:atomepet/controllers/user_controller.dart';
 import 'package:atomepet/controllers/theme_controller.dart';
-import 'package:atomepet/controllers/sync_controller.dart';
 import 'package:atomepet/views/widgets/app_button.dart';
 import 'package:atomepet/routes/app_routes.dart';
 
@@ -13,7 +12,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userController = Get.find<UserController>();
     final themeController = Get.find<ThemeController>();
-    final syncController = Get.find<SyncController>();
 
     return Scaffold(
       appBar: AppBar(title: Text('profile'.tr), centerTitle: true),
@@ -28,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildUserInfo(context, userController),
               const SizedBox(height: 24),
-              _buildSettingsSection(context, themeController, syncController),
+              _buildSettingsSection(context, themeController),
               const SizedBox(height: 24),
               _buildLogoutSection(context, userController),
               const SizedBox(height: 24),
@@ -131,7 +129,6 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildSettingsSection(
     BuildContext context,
     ThemeController themeController,
-    SyncController syncController,
   ) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -169,35 +166,6 @@ class ProfileScreen extends StatelessWidget {
               subtitle: const Text('Toggle app theme'),
               value: themeController.isDarkMode.value,
               onChanged: (value) => themeController.toggleTheme(),
-            ),
-          ),
-          _buildDivider(context),
-          Obx(
-            () => ListTile(
-              leading: Icon(
-                syncController.isOnline.value
-                    ? Icons.cloud_done
-                    : Icons.cloud_off,
-                color: syncController.isOnline.value
-                    ? Colors.green
-                    : Colors.orange,
-              ),
-              title: const Text('Sync Status'),
-              subtitle: Text(
-                syncController.isOnline.value
-                    ? 'Online - Auto sync enabled'
-                    : 'Offline - Changes saved locally',
-              ),
-              trailing: syncController.isSyncing.value
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : IconButton(
-                      icon: const Icon(Icons.sync),
-                      onPressed: () => syncController.syncAll(),
-                    ),
             ),
           ),
           _buildDivider(context),

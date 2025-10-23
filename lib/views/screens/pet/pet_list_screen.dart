@@ -4,7 +4,6 @@ import 'package:atomepet/controllers/pet_controller.dart';
 import 'package:atomepet/models/pet.dart';
 import 'package:atomepet/views/widgets/pet_card.dart';
 import 'package:atomepet/views/widgets/app_widgets.dart';
-import 'package:atomepet/views/widgets/connectivity_banner.dart';
 import 'package:atomepet/views/widgets/shimmer_loading.dart';
 import 'package:atomepet/views/widgets/animated_widgets.dart';
 import 'package:atomepet/routes/app_routes.dart';
@@ -45,7 +44,6 @@ class PetListScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const ConnectivityBanner(),
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value && controller.pets.isEmpty) {
@@ -109,10 +107,10 @@ class PetListScreen extends StatelessWidget {
                       context,
                       index,
                       PetCard(
-                        name: pet.name,
+                        name: pet.name ?? 'Unknown',
                         category: pet.category?.name,
                         status: pet.status?.name,
-                        photoUrls: pet.photoUrls,
+                        photoUrls: pet.photoUrls ?? [],
                         heroTag: 'pet-${pet.id}',
                         onTap: () {
                           controller.selectPet(pet);

@@ -10,8 +10,34 @@ class PetService {
 
   Future<Pet> addPet(Pet pet) async {
     try {
+      // Validate required fields
+      if (pet.name == null || pet.name!.isEmpty) {
+        throw Exception('Pet name is required');
+      }
+      if (pet.photoUrls == null || pet.photoUrls!.isEmpty) {
+        throw Exception('At least one photo URL is required');
+      }
+      
       final response = await _apiService.post('/pet', data: pet.toJson());
-      return Pet.fromJson(response.data);
+      // Handle both JSON object and plain response
+      if (response.data is Map<String, dynamic>) {
+        return Pet.fromJson(response.data);
+      } else if (response.data is String) {
+        // If response is a string, try to parse it
+        try {
+          return Pet.fromJson(response.data);
+        } catch (_) {
+          // If parsing fails, return the pet with a generated ID
+          return pet.copyWith(
+            id: pet.id ?? DateTime.now().millisecondsSinceEpoch,
+          );
+        }
+      } else {
+        // Fallback: return pet with generated ID
+        return pet.copyWith(
+          id: pet.id ?? DateTime.now().millisecondsSinceEpoch,
+        );
+      }
     } catch (e) {
       rethrow;
     }
@@ -19,8 +45,33 @@ class PetService {
 
   Future<Pet> updatePet(Pet pet) async {
     try {
+      // Validate required fields
+      if (pet.id == null) {
+        throw Exception('Pet ID is required for update');
+      }
+      if (pet.name == null || pet.name!.isEmpty) {
+        throw Exception('Pet name is required');
+      }
+      if (pet.photoUrls == null || pet.photoUrls!.isEmpty) {
+        throw Exception('At least one photo URL is required');
+      }
+      
       final response = await _apiService.put('/pet', data: pet.toJson());
-      return Pet.fromJson(response.data);
+      // Handle both JSON object and plain response
+      if (response.data is Map<String, dynamic>) {
+        return Pet.fromJson(response.data);
+      } else if (response.data is String) {
+        // If response is a string, try to parse it
+        try {
+          return Pet.fromJson(response.data);
+        } catch (_) {
+          // If parsing fails, return the original pet
+          return pet;
+        }
+      } else {
+        // Fallback: return original pet
+        return pet;
+      }
     } catch (e) {
       rethrow;
     }

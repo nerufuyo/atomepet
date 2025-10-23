@@ -26,8 +26,8 @@ void main() {
       expect(pet.id, 1);
       expect(pet.name, 'Fluffy');
       expect(pet.status, PetStatus.available);
-      expect(pet.photoUrls.length, 1);
-      expect(pet.photoUrls.first, 'https://example.com/photo1.jpg');
+      expect(pet.photoUrls?.length, 1);
+      expect(pet.photoUrls?.first, 'https://example.com/photo1.jpg');
       expect(pet.category?.name, 'Dogs');
       expect(pet.tags?.length, 2);
       expect(pet.tags?.first.name, 'friendly');
@@ -125,7 +125,7 @@ void main() {
       // Arrange & Act
       final pet = Pet(
         name: 'Fluffy',
-        photoUrls: [],
+        photoUrls: const [],
       );
 
       // Assert

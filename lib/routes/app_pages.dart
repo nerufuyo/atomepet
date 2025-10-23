@@ -65,9 +65,11 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.petForm,
-      page: () => PetFormScreen(
-        pet: Get.arguments as Pet?,
-      ),
+      page: () {
+        // Safely get arguments, defaulting to null if not provided
+        final Pet? pet = Get.arguments is Pet ? Get.arguments as Pet : null;
+        return PetFormScreen(pet: pet);
+      },
       binding: HomeBinding(),
       middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,

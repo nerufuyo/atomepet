@@ -10,18 +10,18 @@ enum PetStatus { available, pending, sold }
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Pet extends Equatable {
   final int? id;
-  final String name;
+  final String? name;
   final Category? category;
-  final List<String> photoUrls;
+  final List<String>? photoUrls;
   final List<Tag>? tags;
   @JsonKey(unknownEnumValue: PetStatus.available)
   final PetStatus? status;
 
   const Pet({
     this.id,
-    required this.name,
+    this.name,
     this.category,
-    required this.photoUrls,
+    this.photoUrls,
     this.tags,
     this.status,
   });

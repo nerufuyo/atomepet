@@ -17,7 +17,6 @@ class StoreController extends GetxController {
   void onInit() {
     super.onInit();
     fetchInventory();
-    fetchCachedOrders();
   }
 
   Future<void> fetchInventory() async {
@@ -106,32 +105,6 @@ class StoreController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> fetchCachedOrders() async {
-    try {
-      final cached = await _storeRepository.getCachedOrders();
-      orders.value = cached;
-    } catch (e) {
-      error.value = e.toString();
-    }
-  }
-
-  Future<void> syncPendingOrders() async {
-    try {
-      isLoading.value = true;
-      await _storeRepository.syncPendingOrders();
-      await fetchCachedOrders();
-      Get.snackbar(
-        'success'.tr,
-        'Orders synced successfully',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } catch (e) {
-      error.value = e.toString();
     } finally {
       isLoading.value = false;
     }
