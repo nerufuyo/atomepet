@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:atomepet/models/pet.dart';
 import 'package:atomepet/repositories/pet_repository.dart';
@@ -8,12 +9,24 @@ class PetController extends GetxController {
   PetController(this._petRepository);
 
   final RxList<Pet> pets = <Pet>[].obs;
-  final RxList<Pet> filteredPets = <Pet>[].obs;
   final Rx<Pet?> selectedPet = Rx<Pet?>(null);
   final RxBool isLoading = false.obs;
   final RxString error = ''.obs;
   final Rx<PetStatus> selectedStatus = PetStatus.available.obs;
   final RxString searchQuery = ''.obs;
+
+  // Computed property - automatically updates when pets or searchQuery change
+  List<Pet> get filteredPets {
+    if (searchQuery.value.isEmpty) {
+      return pets;
+    }
+    return pets.where((pet) {
+      final name = pet.name?.toLowerCase() ?? '';
+      final category = pet.category?.name?.toLowerCase() ?? '';
+      final query = searchQuery.value.toLowerCase();
+      return name.contains(query) || category.contains(query);
+    }).toList();
+  }
 
   @override
   void onInit() {
@@ -27,14 +40,16 @@ class PetController extends GetxController {
       error.value = '';
       final result = await _petRepository.findPetsByStatus(statuses);
       pets.value = result;
-      filteredPets.value = result;
-      _applySearch();
     } catch (e) {
       error.value = e.toString();
       Get.snackbar(
         'error'.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.errorContainer,
+        colorText: Get.theme.colorScheme.onErrorContainer,
+        icon: const Icon(Icons.error_outline),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -53,6 +68,10 @@ class PetController extends GetxController {
         'error'.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.errorContainer,
+        colorText: Get.theme.colorScheme.onErrorContainer,
+        icon: const Icon(Icons.error_outline),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -71,6 +90,10 @@ class PetController extends GetxController {
         'error'.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.errorContainer,
+        colorText: Get.theme.colorScheme.onErrorContainer,
+        icon: const Icon(Icons.error_outline),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -87,6 +110,10 @@ class PetController extends GetxController {
         'success'.tr,
         'Pet added successfully',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.primaryContainer,
+        colorText: Get.theme.colorScheme.onPrimaryContainer,
+        icon: const Icon(Icons.check_circle),
+        duration: const Duration(seconds: 2),
       );
     } catch (e) {
       error.value = e.toString();
@@ -94,6 +121,10 @@ class PetController extends GetxController {
         'error'.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.errorContainer,
+        colorText: Get.theme.colorScheme.onErrorContainer,
+        icon: const Icon(Icons.error_outline),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -114,6 +145,10 @@ class PetController extends GetxController {
         'success'.tr,
         'Pet updated successfully',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.primaryContainer,
+        colorText: Get.theme.colorScheme.onPrimaryContainer,
+        icon: const Icon(Icons.check_circle),
+        duration: const Duration(seconds: 2),
       );
     } catch (e) {
       error.value = e.toString();
@@ -121,6 +156,10 @@ class PetController extends GetxController {
         'error'.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.errorContainer,
+        colorText: Get.theme.colorScheme.onErrorContainer,
+        icon: const Icon(Icons.error_outline),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -140,6 +179,10 @@ class PetController extends GetxController {
         'success'.tr,
         'Pet deleted successfully',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.primaryContainer,
+        colorText: Get.theme.colorScheme.onPrimaryContainer,
+        icon: const Icon(Icons.check_circle),
+        duration: const Duration(seconds: 2),
       );
     } catch (e) {
       error.value = e.toString();
@@ -147,6 +190,10 @@ class PetController extends GetxController {
         'error'.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.errorContainer,
+        colorText: Get.theme.colorScheme.onErrorContainer,
+        icon: const Icon(Icons.error_outline),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -172,19 +219,6 @@ class PetController extends GetxController {
 
   void searchPets(String query) {
     searchQuery.value = query;
-    _applySearch();
-  }
-
-  void _applySearch() {
-    if (searchQuery.value.isEmpty) {
-      filteredPets.value = pets;
-    } else {
-      filteredPets.value = pets.where((pet) {
-        final name = pet.name?.toLowerCase() ?? '';
-        final category = pet.category?.name?.toLowerCase() ?? '';
-        final query = searchQuery.value.toLowerCase();
-        return name.contains(query) || category.contains(query);
-      }).toList();
-    }
+    // filteredPets getter will automatically update
   }
 }

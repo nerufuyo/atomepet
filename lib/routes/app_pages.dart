@@ -66,10 +66,8 @@ class AppPages {
     GetPage(
       name: AppRoutes.petForm,
       page: () {
-        print('GetPage factory for petForm called');
         // Safely get arguments, defaulting to null if not provided
         final Pet? pet = Get.arguments is Pet ? Get.arguments as Pet : null;
-        print('GetPage - pet argument: ${pet != null ? "Pet(id: ${pet.id})" : "null"}');
         return PetFormScreen(pet: pet);
       },
       binding: HomeBinding(),

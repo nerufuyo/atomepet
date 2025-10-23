@@ -77,13 +77,6 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildUserInfo(BuildContext context, UserController controller) {
     final user = controller.currentUser.value;
-    
-    // Debug logging
-    print('Profile - User: ${user?.username}');
-    print('Profile - FirstName: ${user?.firstName}');
-    print('Profile - LastName: ${user?.lastName}');
-    print('Profile - Email: ${user?.email}');
-    print('Profile - Phone: ${user?.phone}');
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),

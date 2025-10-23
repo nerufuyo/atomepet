@@ -31,13 +31,11 @@ class PetDetailScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    print('Edit Pet button clicked - navigating to PetFormScreen');
                     final result = await Get.to(
                       () => PetFormScreen(pet: pet),
                       binding: HomeBinding(),
                       transition: Transition.rightToLeft,
                     );
-                    print('Edit Pet navigation result: $result');
                     if (result == true) {
                       controller.fetchPetById(pet.id!);
                     }
@@ -144,13 +142,11 @@ class PetDetailScreen extends StatelessWidget {
                             icon: Icons.edit,
                             isOutlined: true,
                             onPressed: () async {
-                              print('Bottom Edit Pet button clicked - navigating to PetFormScreen');
                               final result = await Get.to(
                                 () => PetFormScreen(pet: pet),
                                 binding: HomeBinding(),
                                 transition: Transition.rightToLeft,
                               );
-                              print('Bottom Edit Pet navigation result: $result');
                               if (result == true) {
                                 controller.fetchPetById(pet.id!);
                               }

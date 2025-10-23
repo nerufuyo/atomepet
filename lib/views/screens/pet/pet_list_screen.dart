@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:atomepet/controllers/pet_controller.dart';
@@ -20,10 +21,12 @@ class PetListScreen extends StatefulWidget {
 class _PetListScreenState extends State<PetListScreen> {
   final TextEditingController _searchController = TextEditingController();
   final RxBool _isSearching = false.obs;
+  Timer? _debounceTimer;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -48,8 +51,11 @@ class _PetListScreenState extends State<PetListScreen> {
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
-                  // Filter pets locally based on search term
-                  controller.searchPets(value);
+                  // Debounce search to avoid excessive filtering
+                  _debounceTimer?.cancel();
+                  _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+                    controller.searchPets(value);
+                  });
                 },
               )
             : Text('pets'.tr)),
@@ -170,13 +176,11 @@ class _PetListScreenState extends State<PetListScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          print('Add Pet button clicked - navigating to PetFormScreen');
           final result = await Get.to(
             () => const PetFormScreen(pet: null),
             binding: HomeBinding(),
             transition: Transition.rightToLeft,
           );
-          print('Add Pet navigation result: $result');
           if (result == true) {
             controller.fetchPetsByStatus([PetStatus.available]);
           }
