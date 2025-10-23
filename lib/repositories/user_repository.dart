@@ -57,13 +57,17 @@ class UserRepository {
         final token = await _userService.loginUser(username, password);
         await _cacheBox.put('current_user', username);
         await _cacheBox.put('auth_token', token);
+        _logger.i('User logged in successfully: $username');
         return token;
       } else {
         throw Exception('No internet connection');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       _logger.e('Error logging in: $e');
       rethrow;
+    } catch (e) {
+      _logger.e('Unexpected error logging in: $e');
+      throw Exception('Login failed: ${e.toString()}');
     }
   }
 

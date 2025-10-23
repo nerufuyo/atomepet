@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:atomepet/services/api_service.dart';
 import 'package:atomepet/models/user.dart';
 
@@ -28,11 +29,18 @@ class UserService {
 
   Future<String> loginUser(String username, String password) async {
     try {
-      final response = await _apiService.get(
+      final response = await _apiService.dio.get(
         '/user/login',
         queryParameters: {'username': username, 'password': password},
+        options: Options(
+          responseType: ResponseType.plain, // Accept plain text response
+          headers: {
+            'Accept': '*/*',
+          },
+        ),
       );
-      return response.data.toString();
+      // The API returns a session token or message as plain text
+      return response.data?.toString() ?? 'logged in user session';
     } catch (e) {
       rethrow;
     }
