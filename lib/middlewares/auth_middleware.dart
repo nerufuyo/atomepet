@@ -12,14 +12,20 @@ class AuthMiddleware extends GetMiddleware {
     try {
       final userController = Get.find<UserController>();
       
+      print('AuthMiddleware - Route: $route');
+      print('AuthMiddleware - isAuthenticated: ${userController.isAuthenticated.value}');
+      
       // If user is not authenticated, redirect to login
       if (!userController.isAuthenticated.value) {
+        print('AuthMiddleware - Redirecting to login from $route');
         return const RouteSettings(name: AppRoutes.login);
       }
       
+      print('AuthMiddleware - Access granted to $route');
       return null;
     } catch (e) {
       // If UserController is not found, redirect to login
+      print('AuthMiddleware - Error: $e, redirecting to login');
       return const RouteSettings(name: AppRoutes.login);
     }
   }

@@ -81,48 +81,76 @@ class _PetDataTableState extends State<PetDataTable> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isWideScreen = MediaQuery.of(context).size.width >= 1024;
+    final isMobileScreen = MediaQuery.of(context).size.width < 600;
 
     return Card(
       elevation: 2,
+      margin: isMobileScreen ? const EdgeInsets.all(8) : const EdgeInsets.all(24),
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: isMobileScreen ? const EdgeInsets.all(12) : const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header and Controls
-            Row(
-              children: [
-                Text(
-                  'Pet Management',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+            isMobileScreen
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Pet Management',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: () async {
+                            await Get.toNamed(AppRoutes.petForm);
+                            _petController.fetchPetsByStatus([
+                              PetStatus.available,
+                              PetStatus.pending,
+                              PetStatus.sold,
+                            ]);
+                          },
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add New Pet'),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Text(
+                        'Pet Management',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      FilledButton.icon(
+                        onPressed: () async {
+                          await Get.toNamed(AppRoutes.petForm);
+                          _petController.fetchPetsByStatus([
+                            PetStatus.available,
+                            PetStatus.pending,
+                            PetStatus.sold,
+                          ]);
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text('Add New Pet'),
+                      ),
+                    ],
                   ),
-                ),
-                const Spacer(),
-                  FilledButton.icon(
-                  onPressed: () async {
-                    await Get.toNamed(AppRoutes.petForm);
-                    _petController.fetchPetsByStatus([
-                      PetStatus.available,
-                      PetStatus.pending,
-                      PetStatus.sold,
-                    ]);
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add New Pet'),
-                ),
-              ],
-            ),
             const SizedBox(height: 16),
 
             // Search and Filters
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: isWideScreen ? 300 : double.infinity,
+                  width: double.infinity,
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
@@ -150,38 +178,92 @@ class _PetDataTableState extends State<PetDataTable> {
                     },
                   ),
                 ),
-                DropdownMenu<String>(
-                  label: const Text('Status'),
-                  initialSelection: _statusFilter,
-                  dropdownMenuEntries: const [
-                    DropdownMenuEntry(value: 'all', label: 'All Status'),
-                    DropdownMenuEntry(value: 'available', label: 'Available'),
-                    DropdownMenuEntry(value: 'pending', label: 'Pending'),
-                    DropdownMenuEntry(value: 'sold', label: 'Sold'),
-                  ],
-                  onSelected: (value) {
-                    setState(() {
-                      _statusFilter = value ?? 'all';
-                      _currentPage = 0;
-                    });
-                  },
-                ),
-                DropdownMenu<int>(
-                  label: const Text('Rows per page'),
-                  initialSelection: _rowsPerPage,
-                  dropdownMenuEntries: const [
-                    DropdownMenuEntry(value: 5, label: '5'),
-                    DropdownMenuEntry(value: 10, label: '10'),
-                    DropdownMenuEntry(value: 25, label: '25'),
-                    DropdownMenuEntry(value: 50, label: '50'),
-                  ],
-                  onSelected: (value) {
-                    setState(() {
-                      _rowsPerPage = value ?? 10;
-                      _currentPage = 0;
-                    });
-                  },
-                ),
+                const SizedBox(height: 12),
+                isMobileScreen
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: DropdownMenu<String>(
+                              label: const Text('Status'),
+                              initialSelection: _statusFilter,
+                              expandedInsets: EdgeInsets.zero,
+                              dropdownMenuEntries: const [
+                                DropdownMenuEntry(value: 'all', label: 'All Status'),
+                                DropdownMenuEntry(value: 'available', label: 'Available'),
+                                DropdownMenuEntry(value: 'pending', label: 'Pending'),
+                                DropdownMenuEntry(value: 'sold', label: 'Sold'),
+                              ],
+                              onSelected: (value) {
+                                setState(() {
+                                  _statusFilter = value ?? 'all';
+                                  _currentPage = 0;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: DropdownMenu<int>(
+                              label: const Text('Rows per page'),
+                              initialSelection: _rowsPerPage,
+                              expandedInsets: EdgeInsets.zero,
+                              dropdownMenuEntries: const [
+                                DropdownMenuEntry(value: 5, label: '5'),
+                                DropdownMenuEntry(value: 10, label: '10'),
+                                DropdownMenuEntry(value: 25, label: '25'),
+                                DropdownMenuEntry(value: 50, label: '50'),
+                              ],
+                              onSelected: (value) {
+                                setState(() {
+                                  _rowsPerPage = value ?? 10;
+                                  _currentPage = 0;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                    : Wrap(
+                        spacing: 16,
+                        runSpacing: 16,
+                        children: [
+                          DropdownMenu<String>(
+                            label: const Text('Status'),
+                            initialSelection: _statusFilter,
+                            dropdownMenuEntries: const [
+                              DropdownMenuEntry(value: 'all', label: 'All Status'),
+                              DropdownMenuEntry(value: 'available', label: 'Available'),
+                              DropdownMenuEntry(value: 'pending', label: 'Pending'),
+                              DropdownMenuEntry(value: 'sold', label: 'Sold'),
+                            ],
+                            onSelected: (value) {
+                              setState(() {
+                                _statusFilter = value ?? 'all';
+                                _currentPage = 0;
+                              });
+                            },
+                          ),
+                          DropdownMenu<int>(
+                            label: const Text('Rows per page'),
+                            initialSelection: _rowsPerPage,
+                            dropdownMenuEntries: const [
+                              DropdownMenuEntry(value: 5, label: '5'),
+                              DropdownMenuEntry(value: 10, label: '10'),
+                              DropdownMenuEntry(value: 25, label: '25'),
+                              DropdownMenuEntry(value: 50, label: '50'),
+                            ],
+                            onSelected: (value) {
+                              setState(() {
+                                _rowsPerPage = value ?? 10;
+                                _currentPage = 0;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
               ],
             ),
             const SizedBox(height: 24),
@@ -232,9 +314,13 @@ class _PetDataTableState extends State<PetDataTable> {
                     scrollDirection: Axis.horizontal,
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        minWidth: MediaQuery.of(context).size.width - 96,
+                        minWidth: isMobileScreen
+                            ? MediaQuery.of(context).size.width - 40
+                            : MediaQuery.of(context).size.width - 96,
                       ),
                       child: DataTable(
+                        columnSpacing: isMobileScreen ? 12 : 24,
+                        horizontalMargin: isMobileScreen ? 8 : 24,
                         sortColumnIndex: ['id', 'name', 'status', 'category']
                             .indexOf(_sortColumn),
                         sortAscending: _sortAscending,
@@ -248,9 +334,10 @@ class _PetDataTableState extends State<PetDataTable> {
                               });
                             },
                           ),
-                          DataColumn(
-                            label: const Text('Image'),
-                          ),
+                          if (!isMobileScreen)
+                            const DataColumn(
+                              label: Text('Image'),
+                            ),
                           DataColumn(
                             label: const Text('Name'),
                             onSort: (columnIndex, ascending) {
@@ -260,15 +347,16 @@ class _PetDataTableState extends State<PetDataTable> {
                               });
                             },
                           ),
-                          DataColumn(
-                            label: const Text('Category'),
-                            onSort: (columnIndex, ascending) {
-                              setState(() {
-                                _sortColumn = 'category';
-                                _sortAscending = ascending;
-                              });
-                            },
-                          ),
+                          if (!isMobileScreen)
+                            DataColumn(
+                              label: const Text('Category'),
+                              onSort: (columnIndex, ascending) {
+                                setState(() {
+                                  _sortColumn = 'category';
+                                  _sortAscending = ascending;
+                                });
+                              },
+                            ),
                           DataColumn(
                             label: const Text('Status'),
                             onSort: (columnIndex, ascending) {
@@ -279,68 +367,61 @@ class _PetDataTableState extends State<PetDataTable> {
                             },
                           ),
                           const DataColumn(
-                            label: Text('Tags'),
-                          ),
-                          const DataColumn(
                             label: Text('Actions'),
                           ),
                         ],
                         rows: paginatedPets.map((pet) {
                           return DataRow(
                             cells: [
-                              DataCell(Text(pet.id?.toString() ?? 'N/A')),
-                              DataCell(
-                                (pet.photoUrls?.isNotEmpty ?? false)
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: Image.network(
-                                          pet.photoUrls!.first,
-                                          width: 40,
-                                          height: 40,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) =>
-                                              const Icon(Icons.pets, size: 24),
-                                        ),
-                                      )
-                                    : const Icon(Icons.pets, size: 24),
-                              ),
-                              DataCell(Text(pet.name ?? 'Unknown')),
-                              DataCell(Text(pet.category?.name ?? 'N/A')),
-                              DataCell(_buildStatusChip(theme, pet.status)),
-                              DataCell(
-                                pet.tags?.isNotEmpty == true
-                                    ? Wrap(
-                                        spacing: 4,
-                                        children: pet.tags!
-                                            .take(2)
-                                            .map((tag) => Chip(
-                                                  label: Text(
-                                                    tag.name ?? '',
-                                                    style: const TextStyle(fontSize: 11),
-                                                  ),
-                                                  visualDensity: VisualDensity.compact,
-                                                  padding: EdgeInsets.zero,
-                                                ))
-                                            .toList(),
-                                      )
-                                    : const Text('No tags'),
-                              ),
+                              DataCell(Text(
+                                pet.id?.toString() ?? 'N/A',
+                                style: TextStyle(fontSize: isMobileScreen ? 12 : null),
+                              )),
+                              if (!isMobileScreen)
+                                DataCell(
+                                  (pet.photoUrls?.isNotEmpty ?? false)
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(4),
+                                          child: Image.network(
+                                            pet.photoUrls!.first,
+                                            width: 40,
+                                            height: 40,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (_, __, ___) =>
+                                                const Icon(Icons.pets, size: 24),
+                                          ),
+                                        )
+                                      : const Icon(Icons.pets, size: 24),
+                                ),
+                              DataCell(Text(
+                                pet.name ?? 'Unknown',
+                                style: TextStyle(
+                                  fontSize: isMobileScreen ? 12 : null,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )),
+                              if (!isMobileScreen)
+                                DataCell(Text(pet.category?.name ?? 'N/A')),
+                              DataCell(_buildStatusChip(theme, pet.status, isMobileScreen)),
                               DataCell(
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.visibility),
-                                      onPressed: () {
-                                        Get.toNamed(
-                                          AppRoutes.petDetail
-                                              .replaceAll(':id', pet.id.toString()),
-                                        );
-                                      },
-                                      tooltip: 'View',
-                                    ),
+                                    if (!isMobileScreen)
+                                      IconButton(
+                                        icon: const Icon(Icons.visibility),
+                                        iconSize: 20,
+                                        onPressed: () {
+                                          Get.toNamed(
+                                            AppRoutes.petDetail
+                                                .replaceAll(':id', pet.id.toString()),
+                                          );
+                                        },
+                                        tooltip: 'View',
+                                      ),
                                     IconButton(
                                       icon: const Icon(Icons.edit),
+                                      iconSize: 20,
                                       onPressed: () async {
                                         await Get.toNamed(
                                           AppRoutes.petForm,
@@ -359,6 +440,7 @@ class _PetDataTableState extends State<PetDataTable> {
                                         Icons.delete,
                                         color: theme.colorScheme.error,
                                       ),
+                                      iconSize: 20,
                                       onPressed: () => _showDeleteConfirmation(pet),
                                       tooltip: 'Delete',
                                     ),
@@ -374,50 +456,95 @@ class _PetDataTableState extends State<PetDataTable> {
                   const SizedBox(height: 16),
 
                   // Pagination Controls
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Showing ${_currentPage * _rowsPerPage + 1}-${((_currentPage + 1) * _rowsPerPage).clamp(0, filteredPets.length)} of ${filteredPets.length} pets',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.first_page),
-                            onPressed: _currentPage > 0
-                                ? () => setState(() => _currentPage = 0)
-                                : null,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.chevron_left),
-                            onPressed: _currentPage > 0
-                                ? () => setState(() => _currentPage--)
-                                : null,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
+                  isMobileScreen
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
                               'Page ${_currentPage + 1} of ${totalPages > 0 ? totalPages : 1}',
-                              style: theme.textTheme.bodyMedium,
+                              style: theme.textTheme.bodySmall,
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.chevron_right),
-                            onPressed: _currentPage < totalPages - 1
-                                ? () => setState(() => _currentPage++)
-                                : null,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.last_page),
-                            onPressed: _currentPage < totalPages - 1
-                                ? () => setState(() => _currentPage = totalPages - 1)
-                                : null,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Showing ${_currentPage * _rowsPerPage + 1}-${((_currentPage + 1) * _rowsPerPage).clamp(0, filteredPets.length)} of ${filteredPets.length}',
+                              style: theme.textTheme.bodySmall,
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.first_page),
+                                  onPressed: _currentPage > 0
+                                      ? () => setState(() => _currentPage = 0)
+                                      : null,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.chevron_left),
+                                  onPressed: _currentPage > 0
+                                      ? () => setState(() => _currentPage--)
+                                      : null,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.chevron_right),
+                                  onPressed: _currentPage < totalPages - 1
+                                      ? () => setState(() => _currentPage++)
+                                      : null,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.last_page),
+                                  onPressed: _currentPage < totalPages - 1
+                                      ? () => setState(() => _currentPage = totalPages - 1)
+                                      : null,
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Showing ${_currentPage * _rowsPerPage + 1}-${((_currentPage + 1) * _rowsPerPage).clamp(0, filteredPets.length)} of ${filteredPets.length} pets',
+                              style: theme.textTheme.bodySmall,
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.first_page),
+                                  onPressed: _currentPage > 0
+                                      ? () => setState(() => _currentPage = 0)
+                                      : null,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.chevron_left),
+                                  onPressed: _currentPage > 0
+                                      ? () => setState(() => _currentPage--)
+                                      : null,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: Text(
+                                    'Page ${_currentPage + 1} of ${totalPages > 0 ? totalPages : 1}',
+                                    style: theme.textTheme.bodyMedium,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.chevron_right),
+                                  onPressed: _currentPage < totalPages - 1
+                                      ? () => setState(() => _currentPage++)
+                                      : null,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.last_page),
+                                  onPressed: _currentPage < totalPages - 1
+                                      ? () => setState(() => _currentPage = totalPages - 1)
+                                      : null,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                 ],
               );
             }),
@@ -427,7 +554,7 @@ class _PetDataTableState extends State<PetDataTable> {
     );
   }
 
-  Widget _buildStatusChip(ThemeData theme, PetStatus? status) {
+  Widget _buildStatusChip(ThemeData theme, PetStatus? status, [bool isMobile = false]) {
     Color color;
     IconData icon;
 
@@ -450,18 +577,19 @@ class _PetDataTableState extends State<PetDataTable> {
     }
 
     return Chip(
-      avatar: Icon(icon, size: 16, color: color),
+      avatar: isMobile ? null : Icon(icon, size: 16, color: color),
       label: Text(
-        status?.name ?? 'Unknown',
+        isMobile ? status?.name.substring(0, 3).toUpperCase() ?? 'N/A' : status?.name ?? 'Unknown',
         style: TextStyle(
           color: color,
           fontWeight: FontWeight.w600,
-          fontSize: 12,
+          fontSize: isMobile ? 10 : 12,
         ),
       ),
       backgroundColor: color.withOpacity(0.1),
       side: BorderSide(color: color.withOpacity(0.3)),
       visualDensity: VisualDensity.compact,
+      padding: isMobile ? const EdgeInsets.symmetric(horizontal: 4) : null,
     );
   }
 

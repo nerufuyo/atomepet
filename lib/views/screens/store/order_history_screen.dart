@@ -28,8 +28,8 @@ class OrderHistoryScreen extends StatelessWidget {
               if (controller.error.value.isNotEmpty &&
                   controller.orders.isEmpty) {
                 return ErrorView(
-                  message: controller.error.value,
-                  onRetry: () => controller.fetchInventory(),
+                  message: 'Order history is temporarily unavailable.\n\nThe Petstore API doesn\'t support order listing yet.',
+                  onRetry: null, // No retry since API doesn't support this endpoint
                 );
               }
 
@@ -37,7 +37,7 @@ class OrderHistoryScreen extends StatelessWidget {
                 return EmptyState(
                   icon: Icons.shopping_bag_outlined,
                   title: 'No Orders',
-                  message: 'You haven\'t placed any orders yet',
+                  message: 'Order history feature is not available in the demo API.\n\nYou can still view and manage pets!',
                 );
               }
 

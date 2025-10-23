@@ -5,13 +5,10 @@ import 'package:atomepet/config/themes/app_theme.dart';
 import 'package:atomepet/config/translations/app_translations.dart';
 import 'package:atomepet/routes/app_pages.dart';
 import 'package:atomepet/routes/app_routes.dart';
-import 'package:atomepet/services/database_service.dart';
 import 'package:atomepet/bindings/initial_binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await DatabaseService().init();
 
   runApp(const MyApp());
 }

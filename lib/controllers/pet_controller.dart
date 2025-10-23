@@ -8,10 +8,12 @@ class PetController extends GetxController {
   PetController(this._petRepository);
 
   final RxList<Pet> pets = <Pet>[].obs;
+  final RxList<Pet> filteredPets = <Pet>[].obs;
   final Rx<Pet?> selectedPet = Rx<Pet?>(null);
   final RxBool isLoading = false.obs;
   final RxString error = ''.obs;
   final Rx<PetStatus> selectedStatus = PetStatus.available.obs;
+  final RxString searchQuery = ''.obs;
 
   @override
   void onInit() {
@@ -25,6 +27,8 @@ class PetController extends GetxController {
       error.value = '';
       final result = await _petRepository.findPetsByStatus(statuses);
       pets.value = result;
+      filteredPets.value = result;
+      _applySearch();
     } catch (e) {
       error.value = e.toString();
       Get.snackbar(
@@ -164,5 +168,23 @@ class PetController extends GetxController {
 
   void clearError() {
     error.value = '';
+  }
+
+  void searchPets(String query) {
+    searchQuery.value = query;
+    _applySearch();
+  }
+
+  void _applySearch() {
+    if (searchQuery.value.isEmpty) {
+      filteredPets.value = pets;
+    } else {
+      filteredPets.value = pets.where((pet) {
+        final name = pet.name?.toLowerCase() ?? '';
+        final category = pet.category?.name?.toLowerCase() ?? '';
+        final query = searchQuery.value.toLowerCase();
+        return name.contains(query) || category.contains(query);
+      }).toList();
+    }
   }
 }

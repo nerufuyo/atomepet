@@ -7,9 +7,25 @@ import 'package:atomepet/views/widgets/app_widgets.dart';
 import 'package:atomepet/views/widgets/shimmer_loading.dart';
 import 'package:atomepet/views/widgets/animated_widgets.dart';
 import 'package:atomepet/routes/app_routes.dart';
+import 'package:atomepet/views/screens/pet/pet_form_screen.dart';
+import 'package:atomepet/bindings/home_binding.dart';
 
-class PetListScreen extends StatelessWidget {
+class PetListScreen extends StatefulWidget {
   const PetListScreen({super.key});
+
+  @override
+  State<PetListScreen> createState() => _PetListScreenState();
+}
+
+class _PetListScreenState extends State<PetListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  final RxBool _isSearching = false.obs;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +33,37 @@ class PetListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('pets'.tr),
+        title: Obx(() => _isSearching.value
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search pets...',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                  ),
+                  border: InputBorder.none,
+                ),
+                onChanged: (value) {
+                  // Filter pets locally based on search term
+                  controller.searchPets(value);
+                },
+              )
+            : Text('pets'.tr)),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // TODO: Implement search
-            },
-          ),
+          Obx(() => IconButton(
+                icon: Icon(_isSearching.value ? Icons.close : Icons.search),
+                onPressed: () {
+                  if (_isSearching.value) {
+                    _searchController.clear();
+                    controller.searchPets('');
+                  }
+                  _isSearching.value = !_isSearching.value;
+                },
+              )),
           PopupMenuButton<PetStatus>(
             icon: const Icon(Icons.filter_list),
             onSelected: (status) => controller.filterByStatus(status),
@@ -46,7 +85,7 @@ class PetListScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Obx(() {
-              if (controller.isLoading.value && controller.pets.isEmpty) {
+              if (controller.isLoading.value && controller.filteredPets.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.all(16),
                   child: GridView.builder(
@@ -64,7 +103,7 @@ class PetListScreen extends StatelessWidget {
               }
 
               if (controller.error.value.isNotEmpty &&
-                  controller.pets.isEmpty) {
+                  controller.filteredPets.isEmpty) {
                 return ErrorView(
                   message: controller.error.value,
                   onRetry: () =>
@@ -72,11 +111,13 @@ class PetListScreen extends StatelessWidget {
                 );
               }
 
-              if (controller.pets.isEmpty) {
+              if (controller.filteredPets.isEmpty) {
                 return EmptyState(
                   icon: Icons.pets,
                   title: 'no_data'.tr,
-                  message: 'No pets found',
+                  message: _isSearching.value && _searchController.text.isNotEmpty
+                      ? 'No pets found matching "${_searchController.text}"'
+                      : 'No pets found',
                   action: ElevatedButton.icon(
                     onPressed: () =>
                         controller.fetchPetsByStatus([PetStatus.available]),
@@ -100,9 +141,9 @@ class PetListScreen extends StatelessWidget {
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),
-                  itemCount: controller.pets.length,
+                  itemCount: controller.filteredPets.length,
                   itemBuilder: (context, index) {
-                    final pet = controller.pets[index];
+                    final pet = controller.filteredPets[index];
                     return buildAnimatedGridItem(
                       context,
                       index,
@@ -129,7 +170,13 @@ class PetListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final result = await Get.toNamed(AppRoutes.petForm);
+          print('Add Pet button clicked - navigating to PetFormScreen');
+          final result = await Get.to(
+            () => const PetFormScreen(pet: null),
+            binding: HomeBinding(),
+            transition: Transition.rightToLeft,
+          );
+          print('Add Pet navigation result: $result');
           if (result == true) {
             controller.fetchPetsByStatus([PetStatus.available]);
           }

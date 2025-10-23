@@ -77,6 +77,13 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildUserInfo(BuildContext context, UserController controller) {
     final user = controller.currentUser.value;
+    
+    // Debug logging
+    print('Profile - User: ${user?.username}');
+    print('Profile - FirstName: ${user?.firstName}');
+    print('Profile - LastName: ${user?.lastName}');
+    print('Profile - Email: ${user?.email}');
+    print('Profile - Phone: ${user?.phone}');
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -93,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
             context,
             icon: Icons.badge,
             title: 'Full Name',
-            subtitle: user?.firstName != null || user?.lastName != null
+            subtitle: (user?.firstName?.isNotEmpty == true || user?.lastName?.isNotEmpty == true)
                 ? '${user?.firstName ?? ''} ${user?.lastName ?? ''}'.trim()
                 : 'Not provided',
           ),

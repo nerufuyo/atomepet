@@ -33,6 +33,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
   @override
   void initState() {
     super.initState();
+    print('PetFormScreen - initState called, isEditMode: $isEditMode');
     if (isEditMode) {
       _initializeForm();
     }
@@ -133,12 +134,16 @@ class _PetFormScreenState extends State<PetFormScreen> {
 
     Category? category;
     if (_categoryNameController.text.isNotEmpty) {
+      final categoryId = _categoryIdController.text.isNotEmpty
+          ? int.tryParse(_categoryIdController.text)
+          : 1; // Default category ID required by Petstore API
+      
       category = Category(
-        id: _categoryIdController.text.isNotEmpty
-            ? int.tryParse(_categoryIdController.text)
-            : null,
+        id: categoryId,
         name: _categoryNameController.text,
       );
+      print('Category created: id=$categoryId, name=${_categoryNameController.text}');
+      print('Category toJson: ${category.toJson()}');
     }
 
     final pet = Pet(
@@ -149,6 +154,8 @@ class _PetFormScreenState extends State<PetFormScreen> {
       tags: _tags.isEmpty ? null : _tags.toList(),
       status: _selectedStatus,
     );
+    
+    print('Pet toJson: ${pet.toJson()}');
 
     if (isEditMode) {
       await controller.updatePet(pet);
@@ -163,6 +170,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('PetFormScreen - build() called, isEditMode: $isEditMode');
     final theme = Theme.of(context);
     final controller = Get.find<PetController>();
 

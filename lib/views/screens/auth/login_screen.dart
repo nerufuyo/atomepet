@@ -54,6 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
     await controller.login(_usernameController.text, _passwordController.text);
 
     if (controller.isAuthenticated.value) {
+      // Small delay to ensure state is propagated
+      await Future.delayed(const Duration(milliseconds: 100));
       Get.offAllNamed(AppRoutes.home);
     }
   }

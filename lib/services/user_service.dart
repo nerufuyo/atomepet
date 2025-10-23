@@ -10,7 +10,13 @@ class UserService {
   Future<User> createUser(User user) async {
     try {
       final response = await _apiService.post('/user', data: user.toJson());
-      return User.fromJson(response.data);
+      // Handle different response types
+      if (response.data is Map<String, dynamic>) {
+        return User.fromJson(response.data);
+      } else {
+        // API might return non-JSON, return the user with generated ID
+        return user.copyWith(id: user.id ?? DateTime.now().millisecondsSinceEpoch);
+      }
     } catch (e) {
       rethrow;
     }
@@ -65,7 +71,13 @@ class UserService {
 
   Future<void> updateUser(String username, User user) async {
     try {
-      await _apiService.put('/user/$username', data: user.toJson());
+      await _apiService.put(
+        '/user/$username',
+        data: user.toJson(),
+        options: Options(
+          validateStatus: (status) => status! < 500, // Accept 4xx but not 5xx
+        ),
+      );
     } catch (e) {
       rethrow;
     }

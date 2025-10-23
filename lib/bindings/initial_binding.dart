@@ -32,9 +32,12 @@ class InitialBinding extends Bindings {
     );
 
     Get.lazyPut(() => ThemeController(), fenix: true);
-    Get.lazyPut(
-      () => UserController(Get.find<UserRepository>()),
-      fenix: true,
+    
+    // Use Get.put for UserController to create permanent singleton
+    // This prevents it from being deleted and recreated during navigation
+    Get.put(
+      UserController(Get.find<UserRepository>()),
+      permanent: true,
     );
   }
 }

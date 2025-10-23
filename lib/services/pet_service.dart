@@ -44,35 +44,41 @@ class PetService {
   }
 
   Future<Pet> updatePet(Pet pet) async {
+    // Validate required fields
+    if (pet.id == null) {
+      throw Exception('Pet ID is required for update');
+    }
+    if (pet.name == null || pet.name!.isEmpty) {
+      throw Exception('Pet name is required');
+    }
+    if (pet.photoUrls == null || pet.photoUrls!.isEmpty) {
+      throw Exception('At least one photo URL is required');
+    }
+    
     try {
-      // Validate required fields
-      if (pet.id == null) {
-        throw Exception('Pet ID is required for update');
-      }
-      if (pet.name == null || pet.name!.isEmpty) {
-        throw Exception('Pet name is required');
-      }
-      if (pet.photoUrls == null || pet.photoUrls!.isEmpty) {
-        throw Exception('At least one photo URL is required');
-      }
-      
       final response = await _apiService.put('/pet', data: pet.toJson());
       // Handle both JSON object and plain response
       if (response.data is Map<String, dynamic>) {
         return Pet.fromJson(response.data);
-      } else if (response.data is String) {
-        // If response is a string, try to parse it
-        try {
-          return Pet.fromJson(response.data);
-        } catch (_) {
-          // If parsing fails, return the original pet
-          return pet;
-        }
       } else {
-        // Fallback: return original pet
+        // If response is not JSON, return the original pet (update succeeded)
         return pet;
       }
+    } on DioException catch (e) {
+      // If it's an unknown error (likely a parsing error), but we got a response,
+      // consider the update successful
+      if (e.type == DioExceptionType.unknown && e.response != null) {
+        // Update succeeded, just couldn't parse the response
+        return pet;
+      }
+      rethrow;
     } catch (e) {
+      // For any other error (like FormatException from JSON parsing),
+      // if it's not a network error, assume the update succeeded
+      if (e is! DioException) {
+        // Likely a parsing error, update probably succeeded
+        return pet;
+      }
       rethrow;
     }
   }

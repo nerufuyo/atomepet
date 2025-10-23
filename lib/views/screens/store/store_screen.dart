@@ -31,7 +31,7 @@ class StoreScreen extends StatelessWidget {
               if (controller.error.value.isNotEmpty &&
                   controller.inventory.isEmpty) {
                 return ErrorView(
-                  message: controller.error.value,
+                  message: 'The store inventory service is temporarily unavailable.\n\nThe Petstore API is experiencing issues.',
                   onRetry: () => controller.fetchInventory(),
                 );
               }
@@ -40,7 +40,12 @@ class StoreScreen extends StatelessWidget {
                 return EmptyState(
                   icon: Icons.inventory_2_outlined,
                   title: 'No Inventory',
-                  message: 'No inventory data available',
+                  message: 'Store inventory is currently empty or unavailable',
+                  action: ElevatedButton.icon(
+                    onPressed: () => controller.fetchInventory(),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                  ),
                 );
               }
 
