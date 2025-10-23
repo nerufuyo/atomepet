@@ -137,7 +137,19 @@ class UserRepository {
     try {
       final username = _cacheBox.get('current_user');
       if (username != null) {
-        return await getUserByName(username);
+        try {
+          // Try to get fresh data from API
+          return await getUserByName(username);
+        } catch (e) {
+          // If API fails, fall back to cached data
+          _logger.w('API failed, falling back to cached user data: $e');
+          final cached = _userBox.get('user_$username');
+          if (cached != null) {
+            return User.fromJson(Map<String, dynamic>.from(cached));
+          }
+          // If no cache, throw error
+          throw e;
+        }
       }
       return null;
     } catch (e) {
