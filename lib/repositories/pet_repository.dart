@@ -54,18 +54,20 @@ class PetRepository {
     try {
       if (await _isOnline()) {
         final pets = await _petService.findPetsByStatus(statuses);
+        // Store each pet individually
         for (var pet in pets) {
           await _petBox.put('pet_${pet.id}', pet.toJson());
         }
-        await _petBox.put(
-          'cached_pets_by_status',
-          pets.map((p) => p.toJson()).toList(),
-        );
+        // Store the list as JSON maps
+        final jsonList = pets.map((p) => p.toJson()).toList();
+        await _petBox.put('cached_pets_by_status', jsonList);
         return pets;
       } else {
         final cached = _petBox.get('cached_pets_by_status');
-        if (cached != null) {
-          return (cached as List).map((p) => Pet.fromJson(p)).toList();
+        if (cached != null && cached is List) {
+          return cached
+              .map((json) => Pet.fromJson(Map<String, dynamic>.from(json)))
+              .toList();
         }
         throw Exception('No cached data available');
       }
