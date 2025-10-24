@@ -92,9 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         color: Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                        ),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: TextField(
                         controller: _searchController,
@@ -110,7 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 20,
                           ),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                         ),
                         onSubmitted: (value) {
                           if (value.isNotEmpty) {
@@ -172,20 +173,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  
+
                   // Promotional Banner
                   _buildPromotionalBanner(context),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Trending Now Section
                   _buildTrendingSection(context, petController, cartController),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Browse Pet Types
                   _buildBrowsePetTypes(context),
-                  
+
                   const SizedBox(height: 24),
                 ],
               ),
@@ -205,10 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 160,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                const Color(0xFF4ECDC4),
-                const Color(0xFF44A08D),
-              ],
+              colors: [const Color(0xFF4ECDC4), const Color(0xFF44A08D)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -245,7 +243,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -292,7 +293,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTrendingSection(BuildContext context, PetController petController, CartController cartController) {
+  Widget _buildTrendingSection(
+    BuildContext context,
+    PetController petController,
+    CartController cartController,
+  ) {
     return Column(
       children: [
         Padding(
@@ -312,10 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => Get.toNamed(AppRoutes.petList),
                 child: const Text(
                   'See all',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF6B4EFF),
-                  ),
+                  style: TextStyle(fontSize: 14, color: Color(0xFF6B4EFF)),
                 ),
               ),
             ],
@@ -324,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 12),
         Obx(() {
           final pets = petController.pets.take(4).toList();
-          
+
           if (pets.isEmpty) {
             return const SizedBox(
               height: 200,
@@ -341,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) {
                 final pet = pets[index];
                 final price = _calculatePetPrice(pet);
-                
+
                 return Obx(() {
                   final isInCart = cartController.isPetInCart(pet.id ?? 0);
                   final cartItem = cartController.getCartItem(pet.id ?? 0);
@@ -369,10 +371,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         cartController.addToCart(pet, customPrice: price);
                       },
                       onIncreaseQuantity: () {
-                        cartController.updateQuantity(pet.id ?? 0, quantity + 1);
+                        cartController.updateQuantity(
+                          pet.id ?? 0,
+                          quantity + 1,
+                        );
                       },
                       onDecreaseQuantity: () {
-                        cartController.updateQuantity(pet.id ?? 0, quantity - 1);
+                        cartController.updateQuantity(
+                          pet.id ?? 0,
+                          quantity - 1,
+                        );
                       },
                       onRemoveFromCart: () {
                         cartController.removeFromCart(pet.id ?? 0);
@@ -413,10 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => Get.toNamed(AppRoutes.petList),
                 child: const Text(
                   'See all',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF6B4EFF),
-                  ),
+                  style: TextStyle(fontSize: 14, color: Color(0xFF6B4EFF)),
                 ),
               ),
             ],

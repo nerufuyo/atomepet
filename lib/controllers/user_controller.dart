@@ -29,17 +29,19 @@ class UserController extends GetxController {
       final storedToken = _storageService.getAuthToken();
       final storedUsername = _storageService.getUsername();
       final isAuthStored = _storageService.getAuthenticationStatus();
-      
+
       if (isAuthStored && storedToken != null && storedUsername != null) {
         // Restore auth state from storage
         authToken.value = storedToken;
-        
+
         // Try to fetch fresh user data from API
         try {
           final user = await _userRepository.getUserByName(storedUsername);
           currentUser.value = user;
         } catch (e) {
-          _logger.w('Failed to fetch user details from API, using stored data: $e');
+          _logger.w(
+            'Failed to fetch user details from API, using stored data: $e',
+          );
           // Restore user data from storage
           currentUser.value = User(
             id: _storageService.getUserId() ?? 0,
@@ -52,7 +54,7 @@ class UserController extends GetxController {
             userStatus: 1,
           );
         }
-        
+
         isAuthenticated.value = true;
         _logger.i('User authenticated from storage: $storedUsername');
       } else {
@@ -71,12 +73,12 @@ class UserController extends GetxController {
       error.value = '';
       final token = await _userRepository.loginUser(username, password);
       authToken.value = token;
-      
+
       // Try to fetch user details, but don't fail login if it errors
       try {
         final user = await _userRepository.getUserByName(username);
         currentUser.value = user;
-        
+
         // Save full user data to storage
         await _storageService.saveUserId(user.id ?? 0);
         await _storageService.saveEmail(user.email);
@@ -98,12 +100,12 @@ class UserController extends GetxController {
         );
         await _storageService.saveUserId(0);
       }
-      
+
       // Save auth data to storage
       await _storageService.saveAuthToken(token);
       await _storageService.saveUsername(username);
       await _storageService.saveAuthenticationStatus(true);
-      
+
       isAuthenticated.value = true;
       Get.snackbar(
         'success'.tr,
@@ -127,10 +129,10 @@ class UserController extends GetxController {
     try {
       isLoading.value = true;
       await _userRepository.logoutUser();
-      
+
       // Clear storage
       await _storageService.clearAuthData();
-      
+
       currentUser.value = null;
       authToken.value = '';
       isAuthenticated.value = false;
@@ -156,11 +158,11 @@ class UserController extends GetxController {
       isLoading.value = true;
       error.value = '';
       final newUser = await _userRepository.createUser(user);
-      
+
       // Registration succeeded, set as current user for convenience
       currentUser.value = newUser;
       isAuthenticated.value = true;
-      
+
       Get.snackbar(
         'success'.tr,
         'Registration successful!',
@@ -191,14 +193,14 @@ class UserController extends GetxController {
         }
         // Update locally regardless of API success
         currentUser.value = user;
-        
+
         // Update storage
         await _storageService.saveUserId(user.id ?? 0);
         await _storageService.saveEmail(user.email);
         await _storageService.saveFirstName(user.firstName);
         await _storageService.saveLastName(user.lastName);
         await _storageService.savePhone(user.phone);
-        
+
         Get.snackbar(
           'success'.tr,
           'Profile updated',
@@ -257,17 +259,19 @@ class UserController extends GetxController {
     try {
       isLoading.value = true;
       error.value = '';
-      
-      final user = await _userRepository.getUserByName(currentUser.value!.username!);
+
+      final user = await _userRepository.getUserByName(
+        currentUser.value!.username!,
+      );
       currentUser.value = user;
-      
+
       // Update storage with fresh data
       await _storageService.saveUserId(user.id ?? 0);
       await _storageService.saveEmail(user.email);
       await _storageService.saveFirstName(user.firstName);
       await _storageService.saveLastName(user.lastName);
       await _storageService.savePhone(user.phone);
-      
+
       _logger.i('User data refreshed successfully');
     } catch (e) {
       error.value = e.toString();

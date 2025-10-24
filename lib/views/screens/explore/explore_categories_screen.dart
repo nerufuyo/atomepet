@@ -6,7 +6,8 @@ class ExploreCategoriesScreen extends StatefulWidget {
   const ExploreCategoriesScreen({super.key});
 
   @override
-  State<ExploreCategoriesScreen> createState() => _ExploreCategoriesScreenState();
+  State<ExploreCategoriesScreen> createState() =>
+      _ExploreCategoriesScreenState();
 }
 
 class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
@@ -102,21 +103,22 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
                 children: [
                   const Text(
                     'Explore Categories',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Search Bar
                   Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surfaceVariant.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outline.withOpacity(0.2),
                       ),
                     ),
                     child: TextField(
@@ -124,16 +126,23 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search Product or Brand',
                         hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.5),
                           fontSize: 14,
                         ),
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.5),
                           size: 20,
                         ),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
                       onSubmitted: (value) {
                         if (value.isNotEmpty) {
@@ -156,7 +165,7 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
                 itemBuilder: (context, index) {
                   final category = _categories[index];
                   final isSelected = _selectedCategory == category['name'];
-                  
+
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ChoiceChip(
@@ -166,7 +175,9 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
                           color: isSelected
                               ? category['textColor'] as Color
                               : Colors.grey.shade700,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
@@ -181,11 +192,16 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
                         borderRadius: BorderRadius.circular(20),
                         side: BorderSide(
                           color: isSelected
-                              ? (category['textColor'] as Color).withOpacity(0.3)
+                              ? (category['textColor'] as Color).withOpacity(
+                                  0.3,
+                                )
                               : Colors.grey.shade300,
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                     ),
                   );
                 },
@@ -207,7 +223,7 @@ class _ExploreCategoriesScreenState extends State<ExploreCategoriesScreen> {
                 itemCount: _categoryCards.length,
                 itemBuilder: (context, index) {
                   final card = _categoryCards[index];
-                  
+
                   return InkWell(
                     onTap: () {
                       // Navigate to pet list with category filter

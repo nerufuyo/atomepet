@@ -17,11 +17,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int _selectedIndex = 0;
 
   final List<NavigationItem> _navItems = [
-    NavigationItem(
-      icon: Icons.dashboard,
-      label: 'Dashboard',
-      route: '/admin',
-    ),
+    NavigationItem(icon: Icons.dashboard, label: 'Dashboard', route: '/admin'),
     NavigationItem(
       icon: Icons.pets,
       label: 'Pet Management',
@@ -32,11 +28,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       label: 'Orders',
       route: '/admin/orders',
     ),
-    NavigationItem(
-      icon: Icons.people,
-      label: 'Users',
-      route: '/admin/users',
-    ),
+    NavigationItem(icon: Icons.people, label: 'Users', route: '/admin/users'),
   ];
 
   @override
@@ -79,7 +71,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           Text(
                             'Admin Panel',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              color: theme.colorScheme.onSurface.withOpacity(
+                                0.6,
+                              ),
                             ),
                           ),
                         ],
@@ -122,9 +116,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 _buildAppBar(theme, isWideScreen),
 
                 // Content
-                Expanded(
-                  child: _buildContent(),
-                ),
+                Expanded(child: _buildContent()),
               ],
             ),
           ),
@@ -216,7 +208,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           Text(
                             user?.email ?? '',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              color: theme.colorScheme.onSurface.withOpacity(
+                                0.6,
+                              ),
                             ),
                           ),
                         ],
@@ -329,7 +323,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 icon: const Icon(Icons.logout, size: 18),
                 label: const Text('Logout'),
                 style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                 ),
               ),
             ],
@@ -394,7 +391,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       Text(
                         'Manage your pet store efficiently',
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
+                          color: theme.colorScheme.onPrimaryContainer
+                              .withOpacity(0.8),
                         ),
                       ),
                     ],
@@ -408,9 +406,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Statistics Cards
           Text(
             'Overview',
@@ -419,17 +417,25 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           Obx(() {
             final pets = petController.pets;
-            final availableCount = pets.where((p) => p.status == PetStatus.available).length;
-            final pendingCount = pets.where((p) => p.status == PetStatus.pending).length;
-            final soldCount = pets.where((p) => p.status == PetStatus.sold).length;
+            final availableCount = pets
+                .where((p) => p.status == PetStatus.available)
+                .length;
+            final pendingCount = pets
+                .where((p) => p.status == PetStatus.pending)
+                .length;
+            final soldCount = pets
+                .where((p) => p.status == PetStatus.sold)
+                .length;
 
             return LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth >= 900;
-                final crossAxisCount = isWide ? 4 : (constraints.maxWidth >= 600 ? 2 : 1);
+                final crossAxisCount = isWide
+                    ? 4
+                    : (constraints.maxWidth >= 600 ? 2 : 1);
 
                 return GridView.count(
                   crossAxisCount: crossAxisCount,
@@ -529,10 +535,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       color: theme.colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: color.withOpacity(0.3),
-          width: 1,
-        ),
+        side: BorderSide(color: color.withOpacity(0.3), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -588,9 +591,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       child: Card(
         elevation: 0,
         color: theme.colorScheme.primaryContainer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
           width: 200,
           padding: const EdgeInsets.all(24),
@@ -602,11 +603,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   color: theme.colorScheme.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  size: 32,
-                  color: theme.colorScheme.primary,
-                ),
+                child: Icon(icon, size: 32, color: theme.colorScheme.primary),
               ),
               const SizedBox(height: 16),
               Text(
@@ -632,15 +629,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildOrdersContent() {
-    return const Center(
-      child: Text('Orders Management - Coming soon'),
-    );
+    return const Center(child: Text('Orders Management - Coming soon'));
   }
 
   Widget _buildUsersContent() {
-    return const Center(
-      child: Text('Users Management - Coming soon'),
-    );
+    return const Center(child: Text('Users Management - Coming soon'));
   }
 }
 

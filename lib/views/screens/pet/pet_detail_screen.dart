@@ -182,7 +182,7 @@ class PetDetailScreen extends StatelessWidget {
                         content: _buildProductDetails(pet),
                       ),
                       const SizedBox(height: 12),
-                      
+
                       // Expandable Composition Section
                       _buildExpandableSection(
                         context,
@@ -190,7 +190,7 @@ class PetDetailScreen extends StatelessWidget {
                         content: _buildComposition(pet),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Mobile: Purchase button
                       _buildPurchaseSection(context, pet, cartController),
                     ],
@@ -204,7 +204,11 @@ class PetDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPurchaseSection(BuildContext context, Pet pet, CartController cartController) {
+  Widget _buildPurchaseSection(
+    BuildContext context,
+    Pet pet,
+    CartController cartController,
+  ) {
     // Calculate price
     double price = _calculatePetPrice(pet);
     bool canPurchase = pet.status == PetStatus.available;
@@ -221,7 +225,9 @@ class PetDetailScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+              color: Theme.of(
+                context,
+              ).colorScheme.primaryContainer.withOpacity(0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
@@ -233,15 +239,15 @@ class PetDetailScreen extends StatelessWidget {
                 Text(
                   'Price:',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   '\$${price.toStringAsFixed(2)}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ],
             ),
@@ -253,10 +259,14 @@ class PetDetailScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.tertiaryContainer.withOpacity(0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.tertiaryContainer.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.tertiary.withOpacity(0.3),
                 ),
               ),
               child: Row(
@@ -265,8 +275,8 @@ class PetDetailScreen extends StatelessWidget {
                   Text(
                     'Quantity in Cart',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Row(
                     children: [
@@ -274,9 +284,16 @@ class PetDetailScreen extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           if (quantity > 1) {
-                            cartController.updateQuantity(pet.id ?? 0, quantity - 1);
+                            cartController.updateQuantity(
+                              pet.id ?? 0,
+                              quantity - 1,
+                            );
                           } else {
-                            _showRemoveConfirmation(context, pet, cartController);
+                            _showRemoveConfirmation(
+                              context,
+                              pet,
+                              cartController,
+                            );
                           }
                         },
                         icon: Icon(
@@ -294,14 +311,18 @@ class PetDetailScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       // Quantity display
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           '$quantity',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.onTertiary,
                               ),
@@ -311,12 +332,19 @@ class PetDetailScreen extends StatelessWidget {
                       // Increase button
                       IconButton(
                         onPressed: () {
-                          cartController.updateQuantity(pet.id ?? 0, quantity + 1);
+                          cartController.updateQuantity(
+                            pet.id ?? 0,
+                            quantity + 1,
+                          );
                         },
                         icon: const Icon(Icons.add),
                         style: IconButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-                          foregroundColor: Theme.of(context).colorScheme.tertiary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.tertiaryContainer,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.tertiary,
                         ),
                       ),
                     ],
@@ -329,7 +357,9 @@ class PetDetailScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -338,15 +368,15 @@ class PetDetailScreen extends StatelessWidget {
                   Text(
                     'Subtotal:',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Text(
                     '\$${(price * quantity).toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -375,7 +405,9 @@ class PetDetailScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       side: BorderSide(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outline.withOpacity(0.5),
                       ),
                     ),
                     child: const Text(
@@ -391,7 +423,9 @@ class PetDetailScreen extends StatelessWidget {
                       Get.toNamed('/cart');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.1),
                       foregroundColor: Theme.of(context).colorScheme.primary,
                       elevation: 0,
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -401,7 +435,10 @@ class PetDetailScreen extends StatelessWidget {
                     ),
                     child: const Text(
                       'Calculate',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -411,12 +448,17 @@ class PetDetailScreen extends StatelessWidget {
                     Get.back();
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     side: BorderSide(
-                      color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withOpacity(0.5),
                     ),
                   ),
                   child: Row(
@@ -435,14 +477,14 @@ class PetDetailScreen extends StatelessWidget {
 
           // Add to Cart / View Cart button
           AppButton(
-            text: isInCart 
+            text: isInCart
                 ? 'View Cart (${cartController.itemCount} items)'
                 : (canPurchase ? 'Add to Cart' : 'Not Available'),
             icon: isInCart ? Icons.shopping_cart : Icons.add_shopping_cart,
-            backgroundColor: canPurchase 
-                ? (isInCart 
-                    ? Theme.of(context).colorScheme.tertiary
-                    : Theme.of(context).colorScheme.primary)
+            backgroundColor: canPurchase
+                ? (isInCart
+                      ? Theme.of(context).colorScheme.tertiary
+                      : Theme.of(context).colorScheme.primary)
                 : Theme.of(context).colorScheme.surfaceVariant,
             textColor: canPurchase
                 ? Theme.of(context).colorScheme.onPrimary
@@ -467,9 +509,9 @@ class PetDetailScreen extends StatelessWidget {
                   ? 'This pet has already been sold'
                   : 'This pet is currently pending',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                    fontStyle: FontStyle.italic,
-                  ),
+                color: Theme.of(context).colorScheme.error,
+                fontStyle: FontStyle.italic,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -478,16 +520,17 @@ class PetDetailScreen extends StatelessWidget {
     });
   }
 
-  void _showRemoveConfirmation(BuildContext context, Pet pet, CartController cartController) {
+  void _showRemoveConfirmation(
+    BuildContext context,
+    Pet pet,
+    CartController cartController,
+  ) {
     Get.dialog(
       AlertDialog(
         title: const Text('Remove from Cart'),
         content: Text('Remove ${pet.name} from your cart?'),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           TextButton(
             onPressed: () {
               Get.back();
@@ -505,7 +548,7 @@ class PetDetailScreen extends StatelessWidget {
 
   double _calculatePetPrice(Pet pet) {
     double basePrice = 100.0;
-    
+
     // Price based on category
     switch (pet.category?.name?.toLowerCase()) {
       case 'dogs':
@@ -618,27 +661,25 @@ class PetDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExpandableSection(BuildContext context, {required String title, required Widget content}) {
+  Widget _buildExpandableSection(
+    BuildContext context, {
+    required String title,
+    required Widget content,
+  }) {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 0),
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         trailing: Icon(
           Icons.keyboard_arrow_right,
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         ),
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: content,
-          ),
+          Padding(padding: const EdgeInsets.only(bottom: 12), child: content),
         ],
       ),
     );
@@ -661,10 +702,7 @@ class PetDetailScreen extends StatelessWidget {
           const SizedBox(height: 8),
         ],
         if (pet.tags != null && pet.tags!.isNotEmpty) ...[
-          _buildDetailRow(
-            'Tags',
-            pet.tags!.map((tag) => tag.name).join(', '),
-          ),
+          _buildDetailRow('Tags', pet.tags!.map((tag) => tag.name).join(', ')),
         ],
       ],
     );
@@ -687,26 +725,17 @@ class PetDetailScreen extends StatelessWidget {
         if (pet.category?.name != null)
           Text(
             '• Species: ${pet.category!.name}',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade700,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
           ),
         const SizedBox(height: 4),
         Text(
           '• Health: Excellent',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.shade700,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
         ),
         const SizedBox(height: 4),
         Text(
           '• Vaccinated: Yes',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.shade700,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
         ),
       ],
     );
@@ -730,10 +759,7 @@ class PetDetailScreen extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
           ),
         ),
       ],

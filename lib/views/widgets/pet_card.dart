@@ -49,11 +49,8 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
-    
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+
     if (widget.isInCart) {
       _showQuantityControls = true;
       _controller.value = 1.0;
@@ -102,7 +99,7 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final canAddToCart = widget.status?.toLowerCase() == 'available';
-    
+
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 2,
@@ -135,7 +132,7 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                             errorWidget: (context, url, error) => Container(
                               color: Colors.grey.shade100,
                               child: Icon(
-                                Icons.pets, 
+                                Icons.pets,
                                 size: 48,
                                 color: Colors.grey.shade400,
                               ),
@@ -146,13 +143,13 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                           color: Colors.grey.shade100,
                           child: Center(
                             child: Icon(
-                              Icons.pets, 
+                              Icons.pets,
                               size: 48,
                               color: Colors.grey.shade400,
                             ),
                           ),
                         ),
-                  
+
                   // Status badge
                   if (widget.status != null)
                     Positioned(
@@ -160,14 +157,17 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                       left: 8,
                       child: _buildStatusChip(context),
                     ),
-                  
+
                   // Cart badge (top right)
                   if (widget.isInCart)
                     Positioned(
                       top: 8,
                       right: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(12),
@@ -185,11 +185,14 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                 ],
               ),
             ),
-            
+
             // Pet Info - Flexible
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6.0,
+                  vertical: 2.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -206,7 +209,7 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
+
                     // Category
                     if (widget.category != null) ...[
                       const SizedBox(height: 1),
@@ -221,9 +224,9 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                    
+
                     const Spacer(),
-                    
+
                     // Price and Cart Controls
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,10 +246,9 @@ class _PetCardState extends State<PetCard> with SingleTickerProviderStateMixin {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        
+
                         // Cart button
-                        if (canAddToCart)
-                          _buildCartButton(context),
+                        if (canAddToCart) _buildCartButton(context),
                       ],
                     ),
                   ],
