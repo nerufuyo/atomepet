@@ -78,10 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
-              colors: [
-                Color(0xFF6B4EFF),
-                Color(0xFF9B7EFF),
-              ],
+              colors: [Color(0xFF6B4EFF), Color(0xFF9B7EFF)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -128,7 +125,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             context,
             icon: Icons.badge,
             title: 'Full Name',
-            subtitle: (user?.firstName?.isNotEmpty == true || user?.lastName?.isNotEmpty == true)
+            subtitle:
+                (user?.firstName?.isNotEmpty == true ||
+                    user?.lastName?.isNotEmpty == true)
                 ? '${user?.firstName ?? ''} ${user?.lastName ?? ''}'.trim()
                 : 'Not provided',
           ),
@@ -186,22 +185,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
-          Obx(
-            () => SwitchListTile(
-              secondary: Icon(
-                themeController.isDarkMode.value
-                    ? Icons.dark_mode
-                    : Icons.light_mode,
-              ),
-              title: Text(
-                themeController.isDarkMode.value
-                    ? 'dark_mode'.tr
-                    : 'light_mode'.tr,
-              ),
-              subtitle: const Text('Toggle app theme'),
-              value: themeController.isDarkMode.value,
-              onChanged: (value) => themeController.toggleTheme(),
-            ),
+          ListTile(
+            leading: const Icon(Icons.light_mode),
+            title: Text('light_mode'.tr),
+            subtitle: const Text('App is in light mode only'),
+            trailing: const Icon(Icons.check_circle, color: Colors.green),
           ),
           _buildDivider(context),
           ListTile(
