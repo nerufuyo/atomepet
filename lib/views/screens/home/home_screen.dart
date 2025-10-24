@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:atomepet/controllers/user_controller.dart';
 import 'package:atomepet/controllers/theme_controller.dart';
+import 'package:atomepet/controllers/cart_controller.dart';
 import 'package:atomepet/routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,11 +13,54 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userController = Get.find<UserController>();
     final themeController = Get.find<ThemeController>();
+    final cartController = Get.find<CartController>();
+    final bool isWeb = kIsWeb;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('app_name'.tr),
         actions: [
+          // Cart icon (mobile only)
+          if (!isWeb) ...[
+            Obx(() {
+              final itemCount = cartController.itemCount;
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.shopping_cart),
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.cart);
+                    },
+                  ),
+                  if (itemCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.error,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          itemCount > 99 ? '99+' : '$itemCount',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onError,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
+          ],
           Obx(() => IconButton(
                 icon: Icon(
                   themeController.isDarkMode.value

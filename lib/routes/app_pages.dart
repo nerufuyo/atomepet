@@ -9,6 +9,7 @@ import 'package:atomepet/views/screens/home/home_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_list_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_detail_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_form_screen.dart';
+import 'package:atomepet/views/screens/cart/cart_screen.dart';
 import 'package:atomepet/views/screens/store/store_screen.dart';
 import 'package:atomepet/views/screens/store/order_history_screen.dart';
 import 'package:atomepet/views/screens/profile/profile_screen.dart';
@@ -78,6 +79,14 @@ class AppPages {
     GetPage(
       name: AppRoutes.store,
       page: () => const StoreScreen(),
+      binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.rightToLeft,
+      transitionDuration: AppTransitions.defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.cart,
+      page: () => const CartScreen(),
       binding: HomeBinding(),
       middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,

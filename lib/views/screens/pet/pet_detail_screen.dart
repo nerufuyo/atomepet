@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:atomepet/controllers/pet_controller.dart';
+import 'package:atomepet/controllers/cart_controller.dart';
+import 'package:atomepet/models/pet.dart';
 import 'package:atomepet/views/widgets/app_widgets.dart';
 import 'package:atomepet/views/widgets/app_button.dart';
 import 'package:atomepet/views/screens/pet/pet_form_screen.dart';
@@ -13,6 +16,8 @@ class PetDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PetController>();
+    final cartController = Get.find<CartController>();
+    final bool isWeb = kIsWeb;
 
     return Scaffold(
       body: Obx(() {
@@ -134,39 +139,45 @@ class PetDetailScreen extends StatelessWidget {
                       ),
                     ],
                     const SizedBox(height: 32),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AppButton(
-                            text: 'edit_pet'.tr,
-                            icon: Icons.edit,
-                            isOutlined: true,
-                            onPressed: () async {
-                              final result = await Get.to(
-                                () => PetFormScreen(pet: pet),
-                                binding: HomeBinding(),
-                                transition: Transition.rightToLeft,
-                              );
-                              if (result == true) {
-                                controller.fetchPetById(pet.id!);
-                              }
-                            },
+                    // Different buttons for web (admin) vs mobile (purchase)
+                    if (isWeb) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppButton(
+                              text: 'edit_pet'.tr,
+                              icon: Icons.edit,
+                              isOutlined: true,
+                              onPressed: () async {
+                                final result = await Get.to(
+                                  () => PetFormScreen(pet: pet),
+                                  binding: HomeBinding(),
+                                  transition: Transition.rightToLeft,
+                                );
+                                if (result == true) {
+                                  controller.fetchPetById(pet.id!);
+                                }
+                              },
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: AppButton(
-                            text: 'delete_pet'.tr,
-                            icon: Icons.delete,
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.error,
-                            textColor: Theme.of(context).colorScheme.onError,
-                            onPressed: () => _showDeleteConfirmation(context),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: AppButton(
+                              text: 'delete_pet'.tr,
+                              icon: Icons.delete,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.error,
+                              textColor: Theme.of(context).colorScheme.onError,
+                              onPressed: () => _showDeleteConfirmation(context),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ] else ...[
+                      // Mobile: Purchase button
+                      _buildPurchaseSection(context, pet, cartController),
+                    ],
                   ],
                 ),
               ),
@@ -175,6 +186,117 @@ class PetDetailScreen extends StatelessWidget {
         );
       }),
     );
+  }
+
+  Widget _buildPurchaseSection(BuildContext context, Pet pet, CartController cartController) {
+    // Calculate price
+    double price = _calculatePetPrice(pet);
+    bool canPurchase = pet.status == PetStatus.available;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Price display
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Price:',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                '\$${price.toStringAsFixed(2)}',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Add to Cart button
+        Obx(() {
+          final isInCart = cartController.isPetInCart(pet.id ?? 0);
+          final cartItem = cartController.getCartItem(pet.id ?? 0);
+
+          return AppButton(
+            text: isInCart 
+                ? 'In Cart (${cartItem?.quantity ?? 0})'
+                : (canPurchase ? 'Add to Cart' : 'Not Available'),
+            icon: isInCart ? Icons.shopping_cart : Icons.add_shopping_cart,
+            backgroundColor: canPurchase 
+                ? (isInCart 
+                    ? Theme.of(context).colorScheme.tertiary
+                    : Theme.of(context).colorScheme.primary)
+                : Theme.of(context).colorScheme.surfaceVariant,
+            textColor: canPurchase
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            onPressed: canPurchase
+                ? () {
+                    cartController.addToCart(pet, customPrice: price);
+                  }
+                : null,
+          );
+        }),
+        if (!canPurchase) ...[
+          const SizedBox(height: 8),
+          Text(
+            pet.status == PetStatus.sold
+                ? 'This pet has already been sold'
+                : 'This pet is currently pending',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                  fontStyle: FontStyle.italic,
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    );
+  }
+
+  double _calculatePetPrice(Pet pet) {
+    double basePrice = 100.0;
+    
+    // Price based on category
+    switch (pet.category?.name?.toLowerCase()) {
+      case 'dogs':
+        basePrice = 500.0;
+        break;
+      case 'cats':
+        basePrice = 400.0;
+        break;
+      case 'birds':
+        basePrice = 150.0;
+        break;
+      case 'fish':
+        basePrice = 50.0;
+        break;
+      default:
+        basePrice = 200.0;
+    }
+
+    // Status affects price
+    if (pet.status == PetStatus.sold) {
+      basePrice = 0.0;
+    } else if (pet.status == PetStatus.pending) {
+      basePrice *= 0.9; // 10% discount
+    }
+
+    return basePrice;
   }
 
   Widget _buildInfoRow(

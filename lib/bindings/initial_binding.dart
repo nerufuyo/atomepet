@@ -8,6 +8,7 @@ import 'package:atomepet/repositories/store_repository.dart';
 import 'package:atomepet/repositories/user_repository.dart';
 import 'package:atomepet/controllers/theme_controller.dart';
 import 'package:atomepet/controllers/user_controller.dart';
+import 'package:atomepet/controllers/cart_controller.dart';
 
 class InitialBinding extends Bindings {
   @override
@@ -37,6 +38,12 @@ class InitialBinding extends Bindings {
     // This prevents it from being deleted and recreated during navigation
     Get.put(
       UserController(Get.find<UserRepository>()),
+      permanent: true,
+    );
+
+    // Cart controller for mobile shopping
+    Get.put(
+      CartController(Get.find<StoreRepository>()),
       permanent: true,
     );
   }
