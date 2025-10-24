@@ -5,7 +5,9 @@ import 'package:atomepet/middlewares/auth_middleware.dart';
 import 'package:atomepet/views/screens/splash_screen.dart';
 import 'package:atomepet/views/screens/auth/login_screen.dart';
 import 'package:atomepet/views/screens/auth/register_screen.dart';
+import 'package:atomepet/views/screens/main_navigation_screen.dart';
 import 'package:atomepet/views/screens/home/home_screen.dart';
+import 'package:atomepet/views/screens/explore/explore_categories_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_list_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_detail_screen.dart';
 import 'package:atomepet/views/screens/pet/pet_form_screen.dart';
@@ -42,7 +44,15 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.home,
-      page: () => const HomeScreen(),
+      page: () => const MainNavigationScreen(),
+      binding: HomeBinding(),
+      middlewares: [AuthMiddleware()],
+      transition: Transition.fadeIn,
+      transitionDuration: AppTransitions.defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.explore,
+      page: () => const ExploreCategoriesScreen(),
       binding: HomeBinding(),
       middlewares: [AuthMiddleware()],
       transition: Transition.fadeIn,
@@ -67,8 +77,18 @@ class AppPages {
     GetPage(
       name: AppRoutes.petForm,
       page: () {
-        // Safely get arguments, defaulting to null if not provided
-        final Pet? pet = Get.arguments is Pet ? Get.arguments as Pet : null;
+        // Safely get arguments - handle both Pet object and null
+        Pet? pet;
+        try {
+          final args = Get.arguments;
+          if (args is Pet) {
+            pet = args;
+          } else if (args is Map && args.containsKey('pet')) {
+            pet = args['pet'] as Pet?;
+          }
+        } catch (e) {
+          pet = null;
+        }
         return PetFormScreen(pet: pet);
       },
       binding: HomeBinding(),

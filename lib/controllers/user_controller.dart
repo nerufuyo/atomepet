@@ -2,10 +2,12 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:atomepet/models/user.dart';
 import 'package:atomepet/repositories/user_repository.dart';
+import 'package:atomepet/services/storage_service.dart';
 
 class UserController extends GetxController {
   final UserRepository _userRepository;
   final Logger _logger = Logger();
+  final StorageService _storageService = StorageService();
 
   UserController(this._userRepository);
 
@@ -23,13 +25,42 @@ class UserController extends GetxController {
 
   Future<void> checkAuthStatus() async {
     try {
-      // Check if there's a stored user or auth token
-      if (currentUser.value != null || authToken.value.isNotEmpty) {
+      // Check if there's stored auth data
+      final storedToken = _storageService.getAuthToken();
+      final storedUsername = _storageService.getUsername();
+      final isAuthStored = _storageService.getAuthenticationStatus();
+      
+      if (isAuthStored && storedToken != null && storedUsername != null) {
+        // Restore auth state from storage
+        authToken.value = storedToken;
+        
+        // Try to fetch fresh user data from API
+        try {
+          final user = await _userRepository.getUserByName(storedUsername);
+          currentUser.value = user;
+        } catch (e) {
+          _logger.w('Failed to fetch user details from API, using stored data: $e');
+          // Restore user data from storage
+          currentUser.value = User(
+            id: _storageService.getUserId() ?? 0,
+            username: storedUsername,
+            email: _storageService.getEmail(),
+            firstName: _storageService.getFirstName(),
+            lastName: _storageService.getLastName(),
+            phone: _storageService.getPhone(),
+            password: null,
+            userStatus: 1,
+          );
+        }
+        
         isAuthenticated.value = true;
+        _logger.i('User authenticated from storage: $storedUsername');
       } else {
         isAuthenticated.value = false;
+        _logger.i('No stored authentication found');
       }
     } catch (e) {
+      _logger.e('Error checking auth status: $e');
       isAuthenticated.value = false;
     }
   }
@@ -45,6 +76,13 @@ class UserController extends GetxController {
       try {
         final user = await _userRepository.getUserByName(username);
         currentUser.value = user;
+        
+        // Save full user data to storage
+        await _storageService.saveUserId(user.id ?? 0);
+        await _storageService.saveEmail(user.email);
+        await _storageService.saveFirstName(user.firstName);
+        await _storageService.saveLastName(user.lastName);
+        await _storageService.savePhone(user.phone);
       } catch (e) {
         _logger.w('Failed to fetch user details, but login succeeded: $e');
         // Create a minimal user object with just the username
@@ -58,7 +96,13 @@ class UserController extends GetxController {
           phone: null,
           userStatus: null,
         );
+        await _storageService.saveUserId(0);
       }
+      
+      // Save auth data to storage
+      await _storageService.saveAuthToken(token);
+      await _storageService.saveUsername(username);
+      await _storageService.saveAuthenticationStatus(true);
       
       isAuthenticated.value = true;
       Get.snackbar(
@@ -83,6 +127,10 @@ class UserController extends GetxController {
     try {
       isLoading.value = true;
       await _userRepository.logoutUser();
+      
+      // Clear storage
+      await _storageService.clearAuthData();
+      
       currentUser.value = null;
       authToken.value = '';
       isAuthenticated.value = false;
@@ -143,6 +191,14 @@ class UserController extends GetxController {
         }
         // Update locally regardless of API success
         currentUser.value = user;
+        
+        // Update storage
+        await _storageService.saveUserId(user.id ?? 0);
+        await _storageService.saveEmail(user.email);
+        await _storageService.saveFirstName(user.firstName);
+        await _storageService.saveLastName(user.lastName);
+        await _storageService.savePhone(user.phone);
+        
         Get.snackbar(
           'success'.tr,
           'Profile updated',
@@ -190,5 +246,35 @@ class UserController extends GetxController {
 
   void clearError() {
     error.value = '';
+  }
+
+  Future<void> fetchCurrentUserData() async {
+    if (currentUser.value?.username == null) {
+      _logger.w('Cannot fetch user data: no username available');
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+      error.value = '';
+      
+      final user = await _userRepository.getUserByName(currentUser.value!.username!);
+      currentUser.value = user;
+      
+      // Update storage with fresh data
+      await _storageService.saveUserId(user.id ?? 0);
+      await _storageService.saveEmail(user.email);
+      await _storageService.saveFirstName(user.firstName);
+      await _storageService.saveLastName(user.lastName);
+      await _storageService.savePhone(user.phone);
+      
+      _logger.i('User data refreshed successfully');
+    } catch (e) {
+      error.value = e.toString();
+      _logger.e('Failed to fetch user data: $e');
+      // Don't show error snackbar here, let the UI handle it
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

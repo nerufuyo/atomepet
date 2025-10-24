@@ -6,9 +6,13 @@ import 'package:atomepet/config/translations/app_translations.dart';
 import 'package:atomepet/routes/app_pages.dart';
 import 'package:atomepet/routes/app_routes.dart';
 import 'package:atomepet/bindings/initial_binding.dart';
+import 'package:atomepet/services/storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize storage service
+  await StorageService().init();
 
   runApp(const MyApp());
 }
@@ -22,8 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'AtomePet',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       translations: AppTranslations(),
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('en', 'US'),

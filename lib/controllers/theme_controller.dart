@@ -1,76 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeController extends GetxController {
-  final Rx<ThemeMode> themeMode = ThemeMode.system.obs;
+  final Rx<ThemeMode> themeMode = ThemeMode.light.obs;
   final RxBool isDarkMode = false.obs;
-
-  static const String _themePrefKey = 'theme_mode';
 
   @override
   void onInit() {
     super.onInit();
-    loadThemeFromPrefs();
+    // Always force light mode
+    setLightMode();
   }
 
   Future<void> loadThemeFromPrefs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedTheme = prefs.getString(_themePrefKey);
-      if (savedTheme != null) {
-        themeMode.value = ThemeMode.values.firstWhere(
-          (mode) => mode.toString() == savedTheme,
-          orElse: () => ThemeMode.system,
-        );
-        _updateDarkModeStatus();
-      }
-    } catch (e) {
-      themeMode.value = ThemeMode.system;
-    }
+    // Always use light mode
+    themeMode.value = ThemeMode.light;
+    isDarkMode.value = false;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
-    try {
-      themeMode.value = mode;
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_themePrefKey, mode.toString());
-      Get.changeThemeMode(mode);
-      _updateDarkModeStatus();
-    } catch (e) {
-      Get.snackbar(
-        'error'.tr,
-        'Failed to change theme',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
+    // Always force light mode
+    themeMode.value = ThemeMode.light;
+    isDarkMode.value = false;
+    Get.changeThemeMode(ThemeMode.light);
   }
 
   void toggleTheme() {
-    if (themeMode.value == ThemeMode.light) {
-      setThemeMode(ThemeMode.dark);
-    } else {
-      setThemeMode(ThemeMode.light);
-    }
+    // Do nothing - always stay in light mode
+    setLightMode();
   }
 
   void setLightMode() {
-    setThemeMode(ThemeMode.light);
+    themeMode.value = ThemeMode.light;
+    isDarkMode.value = false;
+    Get.changeThemeMode(ThemeMode.light);
   }
 
   void setDarkMode() {
-    setThemeMode(ThemeMode.dark);
+    // Do nothing - always stay in light mode
+    setLightMode();
   }
 
   void setSystemMode() {
-    setThemeMode(ThemeMode.system);
-  }
-
-  void _updateDarkModeStatus() {
-    if (themeMode.value == ThemeMode.system) {
-      isDarkMode.value = Get.isDarkMode;
-    } else {
-      isDarkMode.value = themeMode.value == ThemeMode.dark;
-    }
+    // Do nothing - always stay in light mode
+    setLightMode();
   }
 }

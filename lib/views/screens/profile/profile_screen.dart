@@ -5,8 +5,25 @@ import 'package:atomepet/controllers/theme_controller.dart';
 import 'package:atomepet/views/widgets/app_button.dart';
 import 'package:atomepet/routes/app_routes.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch fresh user data when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userController = Get.find<UserController>();
+      if (userController.currentUser.value != null) {
+        userController.fetchCurrentUserData();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,23 +31,38 @@ class ProfileScreen extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
 
     return Scaffold(
-      appBar: AppBar(title: Text('profile'.tr), centerTitle: true),
+      appBar: AppBar(
+        title: Text('profile'.tr),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF6B4EFF),
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: Obx(() {
         final user = userController.currentUser.value;
+        final isLoading = userController.isLoading.value;
 
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
-              _buildProfileHeader(context, user?.username),
-              const SizedBox(height: 32),
-              _buildUserInfo(context, userController),
-              const SizedBox(height: 24),
-              _buildSettingsSection(context, themeController),
-              const SizedBox(height: 24),
-              _buildLogoutSection(context, userController),
-              const SizedBox(height: 24),
-            ],
+        if (isLoading && user == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return RefreshIndicator(
+          onRefresh: () => userController.fetchCurrentUserData(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(height: 24),
+                _buildProfileHeader(context, user?.username),
+                const SizedBox(height: 32),
+                _buildUserInfo(context, userController),
+                const SizedBox(height: 24),
+                _buildSettingsSection(context, themeController),
+                const SizedBox(height: 24),
+                _buildLogoutSection(context, userController),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         );
       }),
@@ -43,12 +75,12 @@ class ProfileScreen extends StatelessWidget {
         Container(
           width: 100,
           height: 100,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
               colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.secondary,
+                Color(0xFF6B4EFF),
+                Color(0xFF9B7EFF),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -57,8 +89,9 @@ class ProfileScreen extends StatelessWidget {
           child: Center(
             child: Text(
               username?.substring(0, 1).toUpperCase() ?? 'U',
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
+              style: const TextStyle(
+                fontSize: 48,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -67,9 +100,11 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           username ?? 'User',
-          style: Theme.of(
-            context,
-          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
       ],
     );
